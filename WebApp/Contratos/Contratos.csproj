@@ -44,6 +44,7 @@
     <Compile Include="Comentario.cs" />
     <Compile Include="Directora.cs" />
     <Compile Include="Docente.cs" />
+    <Compile Include="Grilla.cs" />
     <Compile Include="Hijo.cs" />
     <Compile Include="Institucion.cs" />
     <Compile Include="IServicioWeb.cs" />

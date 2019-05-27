@@ -153,5 +153,10 @@ namespace Contratos
         /// <param name="usuarioLogueado"></param>
         /// <returns></returns>
         Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado);
+
+        Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+        Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+        Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+        Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
     }
 }

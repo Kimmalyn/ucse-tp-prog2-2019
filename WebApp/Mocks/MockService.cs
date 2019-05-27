@@ -84,7 +84,22 @@ namespace Mocks
             throw new NotImplementedException();
         }
 
+        public Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            throw new NotImplementedException();
+        }
+
         public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuarioLogueado)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
         {
             throw new NotImplementedException();
         }
@@ -96,7 +111,12 @@ namespace Mocks
 
         public string ObtenerNombreGrupo()
         {
-            return "Maxi";
+            return $"Repo original";
+        }
+
+        public Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            throw new NotImplementedException();
         }
 
         public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)
