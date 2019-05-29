@@ -1,0 +1,30 @@
+        public void CrearArchivos()
+        {
+            if (!File.Exists(@"C:\Datos\Prestamos.txt"))
+            {
+                File.Create(@"C:\Datos\Prestamos.txt").Close();
+                ListaPrestamos = new List<Prestamo>(); 
+            }
+        }
+
+        public void LeerClientes()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Clientes.txt"))
+            {
+                string contenido = reader.ReadToEnd();
+                ListaClientes = JsonConvert.DeserializeObject<List<Cliente>>(contenido);
+
+                if (ListaClientes==null)
+                {
+                    ListaClientes = new List<Cliente>();
+                }
+            }
+        }
+        public void GuardarClientes(List<Cliente> listaclientes)
+        {
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Clientes.txt", false))
+            {
+                string jsonClientes = JsonConvert.SerializeObject(listaclientes);
+                writer.Write(jsonClientes);
+            }
+        }
