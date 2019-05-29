@@ -1,0 +1,40 @@
+PROYECTO CONTRATOS
+	INTERFAZ - Los metodos no pueden ser modificados. Si se requiere algo, se comunica por Slack.
+	CLASES DE SERVICIO
+	
+Al momento de testear y probar usar Mock. Para probar cierto modulo, cambiar el Mock por el metodo correspondiente.
+
+LOGIN
+	AUTENTICACIÓN (Metodo 1)
+		Verificar que las credenciales sean correctas. Si las credenciales existen, se autentica el usuario.
+		No se tiene que devolver la clave del uusario logueado.
+	
+	
+	
+	AUTORIZACION (Metodo 2)
+		Solo ocurre si el usuario ya fue autenticado. Verifica si el usuario tiene permiso para acceder.
+		En caso de que falle, retornar que no se tienen permisos.
+		
+		ARCHIVO CLAVES (EMAIL.CLAVE.ROL) - Con rol e email se busca el detalle
+		ARCHIVO USUARIO (NOMBRE APELLIDO EMAIL CLAVE ROLES)
+		
+		LOGUEA > LEE USUARIO y sus datos. Al tener los roles, busca la información complementaria en ROLES.
+		
+AL CARGAR LOS DIFERENTES ROLES, TAMBIEN HAY QUE AÑADIR TODOS LOS DATOS DE ESTE USUARIO A LA LISTA DE USUARIOS.
+
+CLAVE: RANDOM ENTRE 100.000 Y 999.999
+
+ARCHIVOS: USUARIOS DOCENTES DIRECTORES ALUMNOS NOTAS
+		
+[JSONIGNORE] para que no serialize en JSON los hijos d elos padres, ya que van a estar guardados en alumnos.
+
+Tener una clase Padre en la logica de negocios. Su estructura tiene que tener el formato necesario para lo que hay que guardar en el archivo.
+	PADRE > pasar a PADRELOGICA (constructor que recibe un PADRE como parametro) > operar > convertir a PADRE (.Convert)
+
+
+REFERNECIAS:
+	WEB -------------> Servicios, Contratos e Implementacion
+	LOGICA ----------> Contratos ---------------> Implementar los servicios que se nos cante (crear archivos, 
+	IMPLEMENTACION --> Contratos y Lógica
+	SERVICIOS -------> Contratos
+	
