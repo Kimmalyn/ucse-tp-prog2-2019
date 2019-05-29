@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contratos", "Contratos\Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocks", "Mocks\Mocks.csproj", "{C71DB83D-C94E-46AF-8579-B3DFFE048A6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logica", "Logica\Logica.csproj", "{0E43193D-E8D6-4AB1-A2E7-69357D59DD30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Implementacion", "Implementacion\Implementacion.csproj", "{064A5FDE-B065-4A5B-B37B-4D1CF9734839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{C71DB83D-C94E-46AF-8579-B3DFFE048A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C71DB83D-C94E-46AF-8579-B3DFFE048A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C71DB83D-C94E-46AF-8579-B3DFFE048A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E43193D-E8D6-4AB1-A2E7-69357D59DD30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E43193D-E8D6-4AB1-A2E7-69357D59DD30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E43193D-E8D6-4AB1-A2E7-69357D59DD30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E43193D-E8D6-4AB1-A2E7-69357D59DD30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064A5FDE-B065-4A5B-B37B-4D1CF9734839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064A5FDE-B065-4A5B-B37B-4D1CF9734839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064A5FDE-B065-4A5B-B37B-4D1CF9734839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064A5FDE-B065-4A5B-B37B-4D1CF9734839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
