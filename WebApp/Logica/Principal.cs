@@ -11,8 +11,9 @@ namespace Logica
 {
     class Principal
     {
+        public List<Directora> ListaDirectoras { get; set; }
         
-        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)
+        public void CargarDirectora(Directora directora, UsuarioLogueado usuarioLogueado)
         {
             //id nombre apellido email institucion cargo fecha ingreso
             var listadirectora = new List<Directora>();
@@ -27,9 +28,22 @@ namespace Logica
                 string jsonDirectoras = JsonConvert.SerializeObject(listadirectora);
                 writer.Write(jsonDirectoras);
             }
-
-            throw new NotImplementedException();
         }
 
+        public void LeerDiectora()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
+            {
+                string contenido = reader.ReadToEnd();
+                ListaDirectoras = JsonConvert.DeserializeObject<List<Directora>>(contenido);
+
+                if (ListaDirectoras == null)
+                {
+                    ListaDirectoras = new List<Directora>();
+                }
+            }
+        }
+
+        public void 
     }
 }
