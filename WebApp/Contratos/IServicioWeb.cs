@@ -20,6 +20,33 @@ namespace Contratos
         /// <param name="usuarioLogueado"></param>
         /// <returns></returns>
         Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado);
+
+        /// <summary>
+        /// El usuario logueado debe ser una directora
+        /// </summary>
+        /// <param name="hijo"></param>
+        /// <param name="usuarioLogueado"></param>
+        /// <returns></returns>
+        Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado);
+
+        /// <summary>
+        /// El usuario logueado debe ser una directora
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="hijo"></param>
+        /// <param name="usuarioLogueado"></param>
+        /// <returns></returns>
+        Resultado EditarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado);
+
+        /// <summary>
+        /// El usuario logueado debe ser una directora
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="hijo"></param>
+        /// <param name="usuarioLogueado"></param>
+        /// <returns></returns>
+        Resultado EliminarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado);
+
         /// <summary>
         /// El usuario logueado debe ser una directora del mismo institucion
         /// </summary>
@@ -154,9 +181,76 @@ namespace Contratos
         /// <returns></returns>
         Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado);
 
+        /// <summary>
+        /// Grilla de directoras
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="paginaActual"></param>
+        /// <param name="totalPorPagina"></param>
+        /// <param name="busquedaGlobal"></param>
+        /// <returns></returns>
         Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+
+        /// <summary>
+        /// Grilla de docentes
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="paginaActual"></param>
+        /// <param name="totalPorPagina"></param>
+        /// <param name="busquedaGlobal"></param>
+        /// <returns></returns>
         Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+
+        /// <summary>
+        /// Grilla de padres
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="paginaActual"></param>
+        /// <param name="totalPorPagina"></param>
+        /// <param name="busquedaGlobal"></param>
+        /// <returns></returns>
         Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+
+        /// <summary>
+        /// Grilla de alumnos
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="paginaActual"></param>
+        /// <param name="totalPorPagina"></param>
+        /// <param name="busquedaGlobal"></param>
+        /// <returns></returns>
         Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal);
+
+        /// <summary>
+        /// Obtener directora por ID
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id);
+
+        /// <summary>
+        /// Obtener docente por ID
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Docente ObtenerDocentePorId(UsuarioLogueado usuarioLogueado, int id);
+
+        /// <summary>
+        /// Obtener padre por ID
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Padre ObtenerPadrePorId(UsuarioLogueado usuarioLogueado, int id);
+
+        /// <summary>
+        /// Obtener hijo por ID
+        /// </summary>
+        /// <param name="usuarioLogueado"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Hijo ObtenerAlumnoPorId(UsuarioLogueado usuarioLogueado, int id);
     }
 }

@@ -1,0 +1,42 @@
+﻿@{
+    Contratos.UsuarioLogueado loggedUser = ViewBag.User as Contratos.UsuarioLogueado;
+}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs font-bold">@loggedUser.Nombre @loggedUser.Apellido</span>
+                        <span class="text-muted text-xs block">@loggedUser.RolSeleccionado</span>
+                    </a>
+                </div>
+                <div class="logo-element">
+                    IN+
+                </div>
+            </li>
+
+            @if (loggedUser.RolSeleccionado == Contratos.Roles.Directora)
+            {
+                <li>
+                    <a href="#"><i class="fa fa-group"></i> <span class="nav-label">Configuración</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="@Url.Action("Index", "Directores")"><i class="fa fa-user-circle"></i> <span class="nav-label">ABM Directores</span></a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Docentes")"><i class="fa fa-user-circle"></i> <span class="nav-label">ABM Docentes</span></a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Padres")"><i class="fa fa-user-circle"></i> <span class="nav-label">ABM Padres</span></a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Alumnos")"><i class="fa fa-user-circle"></i> <span class="nav-label">ABM Alumnos</span></a>
+                        </li>
+                    </ul>
+                </li>                
+            }
+        </ul>
+    </div>
+</nav>

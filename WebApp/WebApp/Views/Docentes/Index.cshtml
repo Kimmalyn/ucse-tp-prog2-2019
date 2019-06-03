@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Lista de docentes";
+    Contratos.UsuarioLogueado loggedUser = ViewBag.User as Contratos.UsuarioLogueado;
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="well">
+    <div class="row">
+        <div class="col-md-12">            
+            <a href="@Url.Action("Form")" class="btn btn-primary">Nuevo usuario</a>
+        </div>
+    </div>
+</div>
+<div class="gridContainer">
+    @Html.Partial("_MVCGridToolbar", new WebApp.Models.MVCGridToolbarModel()
+    {
+        MVCGridName = "DocentesGrid",
+        PageSize = true,
+        ColumnVisibility = false,
+        Export = false,
+        GlobalSearch = true,
+        TextLabel = "Buscar usuarios...",
+        NewButton = false,
+        NewLink = Url.Action("Form", "Users")
+    })
+
+
+    @Html.MVCGrid("DocentesGrid", new { @user = Newtonsoft.Json.JsonConvert.SerializeObject(loggedUser) })
+    <div class="clearfix"></div>
+</div>

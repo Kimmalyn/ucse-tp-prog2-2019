@@ -1,0 +1,59 @@
+﻿
+@using WebApp.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Inicio de sesión";
+    Layout = null;
+}
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    @Styles.Render("~/Content/css")
+</head>
+
+
+<body class="blue-dark-bg">   
+    <div class="loginColumns animated fadeInDown">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox-content">                    
+                    <h2>Inicio de Sesión</h2>
+                    
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "m-t", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-lock"></i></div>
+                                @Html.PasswordFor(m => m.Clave, new { @class = "form-control", @placeholder = "Contraseña" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Clave, "", new { @class = "text-danger" })
+                        </div>
+                        <input type="submit" value="Ingresar" class="btn btn-primary block full-width m-b" />                        
+
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>    
+</body>
+</html>
+
