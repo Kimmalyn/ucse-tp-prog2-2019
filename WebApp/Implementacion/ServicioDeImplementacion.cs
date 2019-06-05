@@ -1,4 +1,5 @@
 ﻿using Contratos;
+using Logica;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,15 @@ namespace Implementacion
     public class ServicioDeImplementacion : IServicioWeb
     {
         public Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado)
-        {
+        { 
             throw new NotImplementedException();
         }
 
-        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)
+        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
         {
-            throw new NotImplementedException();
+            Principal.Instacia.GuardarDirectora(directora,usuarioLogueado);
+            
+            return new Resultado();
         }
 
         public Resultado AltaDocente(Docente docente, UsuarioLogueado usuarioLogueado)
