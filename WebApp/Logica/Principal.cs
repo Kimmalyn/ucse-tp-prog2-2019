@@ -35,7 +35,7 @@ namespace Logica
         /// <summary>
         /// Metodos
         /// </summary>
-        public void CrearArchivos()
+        private void CrearArchivos()
         {
             if (!File.Exists(@"C:\Datos\Directoras.txt"))
             {
@@ -58,7 +58,7 @@ namespace Logica
             }
         }
 
-        public Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
+        private Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
         {
             var Resultado = new Resultado();
             if (usuariologeado.RolSeleccionado != rol)
@@ -107,6 +107,18 @@ namespace Logica
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
 
+        public Resultado EliminarDirectora(int id, Directora directoraeliminada, UsuarioLogueado usuarioLogueado)
+        {
+            CrearArchivos();
+
+            if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
+            {
+                var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
+                ListaDirectoras.Remove(directora);
+            }            
+            return VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
+        }
+    
 
     }
 }

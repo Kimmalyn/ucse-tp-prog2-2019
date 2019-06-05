@@ -82,7 +82,7 @@ namespace Implementacion
 
         public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instacia.EliminarDirectora(id, directora, usuarioLogueado);
         }
 
         public Resultado EliminarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado)
