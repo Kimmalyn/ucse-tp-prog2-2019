@@ -7,5 +7,6 @@ namespace Contratos
         public Institucion Institucion { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public int ResultadoUltimaEvaluacionAnual { get; set; }
+        public Sala Sala { get; set; }
     }
 }

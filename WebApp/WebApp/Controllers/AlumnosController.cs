@@ -20,7 +20,7 @@ namespace AnBem.WebApplication.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(servicio.ObtenerAlumnos(null, 0,0,"").Lista);
+            return View();
         }
 
         // GET: /Alumnos/Create
@@ -44,6 +44,7 @@ namespace AnBem.WebApplication.Controllers
 
             ViewBag.ReadOnly = readOnly;
             ViewBag.Delete = delete;
+            ViewBag.Salas = new SelectList(servicio.ObtenerSalasPorInstitucion(usuarioLogueado), "Id", "Nombre", usuario?.Sala?.Id);
 
             return View(usuario);
         }
@@ -65,6 +66,9 @@ namespace AnBem.WebApplication.Controllers
             if (ModelState.IsValid)
             {
                 Resultado resultado = new Resultado();
+
+                usuario.Sala.Nombre = servicio.ObtenerSalasPorInstitucion(usuarioLogueado).Single(x => x.Id == usuario.Sala.Id).Nombre;
+
                 if (usuario.Id == 0)
                     resultado = servicio.AltaAlumno(usuario, usuarioLogueado);
                 else
@@ -78,6 +82,7 @@ namespace AnBem.WebApplication.Controllers
 
             ViewBag.ReadOnly = readOnly;
             ViewBag.Delete = delete;
+            ViewBag.Salas = new SelectList(servicio.ObtenerSalasPorInstitucion(usuarioLogueado), "Id", "Nombre", usuario?.Sala?.Id);
 
             return View(usuario);
         }
