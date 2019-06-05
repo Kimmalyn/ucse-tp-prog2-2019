@@ -142,11 +142,13 @@ namespace Logica
         public Resultado EliminarDirectora(int id, Directora directoraeliminada, UsuarioLogueado usuarioLogueado)
         {
             CrearArchivos();
-
+            LeerDirectoras();
             if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
             {
                 var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
                 ListaDirectoras.Remove(directora);
+
+                GuardarDirectora(ListaDirectoras);
             }            
             return VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
         }
