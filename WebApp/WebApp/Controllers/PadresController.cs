@@ -6,21 +6,21 @@ using System.Web;
 using System.Collections.Generic;
 using System;
 using System.Net.Mail;
-using WebApp;
+using WebApp.Controllers;
 using Contratos;
 using Mocks;
+using WebApp.Models;
 
 namespace AnBem.WebApplication.Controllers
 {
-    //[Authorize]
     public class PadresController : BaseController
     {
         private static IServicioWeb servicio = new MockService();
-        // GET: /Padres/
+
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(servicio.ObtenerPadres(null, 0,0,"").Lista);
+            return View();
         }
 
         // GET: /Padres/Create
@@ -82,5 +82,51 @@ namespace AnBem.WebApplication.Controllers
             return View(usuario);
         }
 
+        [HttpGet]
+        public ActionResult Assign(int id)
+        {
+            ViewBag.Title = "Asignar hijo a padre";
+
+            var usuario = servicio.ObtenerPadrePorId(usuarioLogueado, id);
+            var alumnos = servicio.ObtenerAlumnos(usuarioLogueado, 0, int.MaxValue, null).Lista;
+
+            HijoViewModel model = new HijoViewModel();
+            model.Usuario = usuario;
+
+            model.Hijos = alumnos.Select(x => new HijoSelectedViewModel()
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                Apellido = x.Apellido,
+                Selected = usuario.Hijos?.Any(s => s.Id == x.Id) ?? false
+            }).ToArray();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Assign(int id, HijoViewModel model)
+        {
+            var usuario = servicio.ObtenerPadrePorId(usuarioLogueado, id);
+            var alumnos = servicio.ObtenerAlumnos(usuarioLogueado, 0, int.MaxValue, null).Lista;
+
+            foreach (var hijo in usuario.Hijos ?? new Hijo[] { })
+            {
+                if (model.Hijos.Any(x => x.Selected && x.Id == hijo.Id) == false)
+                {
+                    servicio.DesasignarHijoPadre(hijo, usuario, usuarioLogueado);
+                }
+            }
+
+            foreach (var item in model.Hijos.Where(x => x.Selected))
+            {
+                var hijo = alumnos.Single(x => x.Id == item.Id);
+
+                servicio.AsignarHijoPadre(hijo, usuario, usuarioLogueado);
+            }
+
+
+            return RedirectToAction("Index");
+        }
     }
 }

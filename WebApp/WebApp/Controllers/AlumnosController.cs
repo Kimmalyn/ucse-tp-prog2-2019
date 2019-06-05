@@ -6,13 +6,13 @@ using System.Web;
 using System.Collections.Generic;
 using System;
 using System.Net.Mail;
-using WebApp;
+using WebApp.Controllers;
 using Contratos;
 using Mocks;
 
 namespace AnBem.WebApplication.Controllers
 {
-    //[Authorize]
+    
     public class AlumnosController : BaseController
     {
         private static IServicioWeb servicio = new MockService();

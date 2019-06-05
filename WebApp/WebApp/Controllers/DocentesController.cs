@@ -6,13 +6,14 @@ using System.Web;
 using System.Collections.Generic;
 using System;
 using System.Net.Mail;
-using WebApp;
+using WebApp.Controllers;
 using Contratos;
 using Mocks;
+using WebApp.Models;
 
 namespace AnBem.WebApplication.Controllers
 {
-    //[Authorize]
+    
     public class DocentesController : BaseController
     {
         private static IServicioWeb servicio = new MockService();
@@ -20,7 +21,7 @@ namespace AnBem.WebApplication.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(servicio.ObtenerDocentes(null, 0,0,"").Lista);
+            return View();
         }
 
         // GET: /Docentes/Create
@@ -82,5 +83,50 @@ namespace AnBem.WebApplication.Controllers
             return View(usuario);
         }
 
+        [HttpGet]
+        public ActionResult Assign(int id)
+        {
+            ViewBag.Title = "Asignar docente a salas";
+
+            var usuario = servicio.ObtenerDocentePorId(usuarioLogueado, id);
+            var salas = servicio.ObtenerSalasPorInstitucion(usuarioLogueado);
+
+            SalaViewModel model = new SalaViewModel();
+            model.Usuario = usuario;
+            
+            model.Salas = salas.Select(x => new SalaSelectedViewModel()
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                Selected = usuario.Salas?.Any(s=>s.Id == x.Id) ?? false
+            }).ToArray();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Assign(int id, SalaViewModel model)
+        {
+            var salas = servicio.ObtenerSalasPorInstitucion(usuarioLogueado);
+            var usuario = servicio.ObtenerDocentePorId(usuarioLogueado, id);
+
+            foreach (var sala in usuario.Salas ?? new Sala[] { })
+            {
+                if (model.Salas.Any(x=>x.Selected && x.Id == sala.Id) == false)
+                {
+                    servicio.DesasignarDocenteSala(usuario, sala, usuarioLogueado);
+                }
+            }
+
+            foreach (var item in model.Salas.Where(x=>x.Selected))
+            {
+                var sala = salas.Single(x => x.Id == item.Id);
+
+                servicio.AsignarDocenteSala(usuario, sala, usuarioLogueado);
+            }
+
+
+            return RedirectToAction("Index");
+        }
     }
 }

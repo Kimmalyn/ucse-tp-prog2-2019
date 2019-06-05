@@ -8,8 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace WebApp
+namespace WebApp.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         public static IServicioWeb CreateService()

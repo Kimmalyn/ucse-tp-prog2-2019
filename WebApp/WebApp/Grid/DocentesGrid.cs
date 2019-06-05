@@ -5,6 +5,7 @@ using MVCGrid.Web;
 using Newtonsoft.Json;
 using System.Linq;
 using WebApp;
+using WebApp.Controllers;
 
 namespace WebApp.Grid
 {
@@ -32,9 +33,11 @@ namespace WebApp.Grid
 						  cols.Add().WithColumnName("Nombre").WithHeaderText("Nombre").WithValueExpression(i => i.Nombre).WithSorting(false);
 						  cols.Add().WithColumnName("Apellido").WithHeaderText("Apellido").WithValueExpression(i => i.Apellido).WithSorting(false);
 						  cols.Add().WithColumnName("Email").WithHeaderText("Email").WithValueExpression(i => i.Email).WithSorting(false);					  
+						  cols.Add().WithColumnName("Salas").WithHeaderText("Salas asignadas").WithValueExpression(i => i.Salas != null ? string.Join(", ", i.Salas.Select(x=>x.Nombre)) : string.Empty ).WithSorting(false);
 					  cols.Add().WithColumnName("Details").WithHeaderText("").WithCellCssClassExpression((i, c) => "action").WithHtmlEncoding(false)
 								.WithValueExpression((i, c) =>
-									  string.Format("{0}{1}", 									  
+									  string.Format("{0}{1}{2}", 									  
+										string.Format("<a data-modal='' class='text-info' href='{0}' id='{1}' title='Asignar a sala'><span class='fa fa-server'></span></a>", c.UrlHelper.Action("Assign", "Docentes", new { id = i.Id }), i.Id),
 										string.Format("<a data-modal='' class='text-info' href='{0}' id='{1}' title='Editar'><span class='fa fa-pencil'></span></a>", c.UrlHelper.Action("Form", "Docentes", new { id = i.Id }), i.Id),
 										string.Format("<a data-modal='' class='text-info' href='{0}' id='{1}' title='Eliminar'><span class='fa fa-trash'></span></a>", c.UrlHelper.Action("Form", "Docentes", new { id = i.Id, readOnly = true, delete = true }), i.Id)
 									  ));

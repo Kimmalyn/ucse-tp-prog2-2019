@@ -127,7 +127,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\MVCGridConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="BaseController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlumnosController.cs" />
     <Compile Include="Controllers\PadresController.cs" />
@@ -143,6 +143,8 @@
     <Compile Include="Grid\DirectoresGrid.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\MVCGridToolbarModel.cs" />
+    <Compile Include="Models\HijoViewModel.cs" />
+    <Compile Include="Models\SalaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +193,8 @@
     <Content Include="Views\Docentes\Form.cshtml" />
     <Content Include="Views\Padres\Form.cshtml" />
     <Content Include="Views\Alumnos\Form.cshtml" />
+    <Content Include="Views\Docentes\Assign.cshtml" />
+    <Content Include="Views\Padres\Assign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Contratos\Contratos.csproj">
