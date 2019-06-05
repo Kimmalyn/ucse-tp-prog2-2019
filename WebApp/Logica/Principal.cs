@@ -58,32 +58,38 @@ namespace Logica
             }
         }
 
-        public void ObtenerUsuarioLogeado(Usuario usuario, UsuarioLogueado usuariologeado)
+        public Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
         {
-            usuariologeado.Nombre = usuario.Nombre;
-            usuariologeado.Apellido = usuario.Apellido;
-            usuariologeado.Email = usuario.Email;
-            //ver que onda el tema del rol
+            var Resultado = new Resultado();
+            if (usuariologeado.RolSeleccionado != rol)
+            {
+                Resultado.Errores.Add("el rol seleccionado no es el correcto"); 
+            }
+
+            return Resultado;
         }
  
-        public void GuardarDirectora(Directora directora, UsuarioLogueado usuariologueado)
+        public Resultado AñadirDirectora(Directora directora, UsuarioLogueado usuariologueado)
         {
-            var listadirectora = new List<Directora>();
-            listadirectora.Add(directora);
 
             CrearArchivos();
 
-            ObtenerUsuarioLogeado(directora,usuariologueado);
+            var listadirectora = new List<Directora>();
+            listadirectora.Add(directora);                        
 
             using (StreamWriter writer = new StreamWriter(@"C:\Datos\Directoras.txt", false))
             {
                 string jsonDirectoras = JsonConvert.SerializeObject(listadirectora);
                 writer.Write(jsonDirectoras);
             }
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
 
-        public void LeerDirectora()
+        public Resultado EditarDirectora(int id, Directora directoraeditada, UsuarioLogueado usuariologueado)
         {
+            CrearArchivos();
+
             using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
             {
                 string contenido = reader.ReadToEnd();
@@ -94,7 +100,13 @@ namespace Logica
                     ListaDirectoras = new List<Directora>();
                 }
             }
+
+            var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
+            directora = directoraeditada;
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
+
 
     }
 }

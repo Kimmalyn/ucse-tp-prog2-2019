@@ -16,10 +16,8 @@ namespace Implementacion
         }
 
         public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
-        {
-            Principal.Instacia.GuardarDirectora(directora,usuarioLogueado);
-            
-            return new Resultado();
+        {            
+            return Principal.Instacia.AñadirDirectora(directora, usuarioLogueado);
         }
 
         public Resultado AltaDocente(Docente docente, UsuarioLogueado usuarioLogueado)
@@ -62,9 +60,9 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)
+        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
         {
-            throw new NotImplementedException();
+            return Principal.Instacia.EditarDirectora(id, directora, usuarioLogueado);
         }
 
         public Resultado EditarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado)
