@@ -11,9 +11,11 @@ namespace Logica
 {
     public class Principal
     {
+        ///
         /// <summary>
         /// Singleton
         /// </summary>
+        /// 
         private Principal() { }
 
         private static readonly Principal Instacia_Principal = new Principal();
@@ -25,16 +27,31 @@ namespace Logica
                return Instacia_Principal;
             }
         }
+        ///
         /// <summary>
         /// Propiedades
         /// </summary>
+        /// 
         public List<Directora> ListaDirectoras { get; set; }
         public List<Docente> ListaDocentes { get; set; }
         public List<Padre> ListaPadres { get; set; }
         public List<Hijo> ListaHijos { get; set; }
+        ///
         /// <summary>
         /// Metodos
         /// </summary>
+        /// 
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)
+        {
+            List<Usuario> ListaUsuarios = new List<Usuario>();
+            ListaUsuarios.AddRange(ListaDirectoras);
+            ListaUsuarios.AddRange(ListaDocentes);
+            ListaUsuarios.AddRange(ListaPadres);
+            ListaUsuarios.AddRange(ListaHijos);
+
+
+        }
+        //CreaTodosArchivos
         private void CrearArchivos()
         {
             if (!File.Exists(@"C:\Datos\Directoras.txt"))
@@ -73,7 +90,7 @@ namespace Logica
                 List<Hijo> ListaHijos = new List<Hijo>();
             }
         }
-
+        //verfica que el rol usado sea el correcto
         private Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
         {
             var Resultado = new Resultado();
@@ -84,7 +101,7 @@ namespace Logica
 
             return Resultado;
         }
-        
+        // alta de directoras
         public void LeerDirectoras()
         {
             using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
@@ -121,7 +138,6 @@ namespace Logica
 
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
-
         public Resultado EditarDirectora(int id, Directora directoraeditada, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
@@ -138,7 +154,6 @@ namespace Logica
 
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
-
         public Resultado EliminarDirectora(int id, Directora directoraeliminada, UsuarioLogueado usuarioLogueado)
         {
             CrearArchivos();

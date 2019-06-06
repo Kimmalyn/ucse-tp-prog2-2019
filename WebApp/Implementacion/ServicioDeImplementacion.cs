@@ -17,7 +17,7 @@ namespace Implementacion
 
         public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
         {            
-            return Principal.Instacia.NuevaDirectora(directora, usuarioLogueado);
+            return Principal.Instacia.AltaDirectora(directora, usuarioLogueado);
         }
 
         public Resultado AltaDocente(Docente docente, UsuarioLogueado usuarioLogueado)
