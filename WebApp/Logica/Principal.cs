@@ -36,21 +36,13 @@ namespace Logica
         public List<Docente> ListaDocentes { get; set; }
         public List<Padre> ListaPadres { get; set; }
         public List<Hijo> ListaHijos { get; set; }
+        public List<Clave> ListaClaves { get; set; }
+        //public List<Usuario> ListaUsuarios { get; set; }
         ///
         /// <summary>
         /// Metodos
         /// </summary>
-        /// 
-        public UsuarioLogueado ObtenerUsuario(string email, string clave)
-        {
-            List<Usuario> ListaUsuarios = new List<Usuario>();
-            ListaUsuarios.AddRange(ListaDirectoras);
-            ListaUsuarios.AddRange(ListaDocentes);
-            ListaUsuarios.AddRange(ListaPadres);
-            ListaUsuarios.AddRange(ListaHijos);
-
-
-        }
+        ///
         //CreaTodosArchivos
         private void CrearArchivos()
         {
@@ -89,6 +81,72 @@ namespace Logica
             {
                 List<Hijo> ListaHijos = new List<Hijo>();
             }
+
+            if (!File.Exists(@"C:\Datos\Claves.txt"))
+            {
+                File.Create(@"C:\Datos\Claves.txt").Close();
+            }
+            if (ListaClaves == null)
+            {
+                List<Clave> ListaClaves = new List<Clave>();
+            }
+
+        }
+        //Login
+        private void LeerCLaves()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Claves.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaClaves = JsonConvert.DeserializeObject<List<Clave>>(contenido);
+
+                if (ListaClaves == null)
+                {
+                    ListaClaves = new List<Clave>();
+                }
+            }
+        }
+        private void GuardarClaves(List<Clave> listaclaves)
+        {
+            CrearArchivos();
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Clave.txt", false))
+            {
+                string jsonClaves = JsonConvert.SerializeObject(listaclaves);
+                writer.Write(jsonClaves);
+            }
+        }
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)//revisar
+        {
+            CrearArchivos();
+            LeerDirectoras();
+            LeerCLaves();
+            List<Usuario> ListaUsuarios = new List<Usuario>();
+            ListaUsuarios.AddRange(ListaDirectoras);
+            //ListaUsuarios.AddRange(ListaDocentes);
+            //ListaUsuarios.AddRange(ListaPadres);
+            
+            var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
+            var usuario = ListaUsuarios.Where(x => x.Email == email).FirstOrDefault();
+            var usuariologueado = new UsuarioLogueado();
+            if (pass != null||usuario!=null)
+            {
+                usuariologueado.Nombre = usuario.Nombre;
+                usuariologueado.Apellido = usuario.Apellido;
+                usuariologueado.Email = email;
+                usuariologueado.RolSeleccionado = pass.Rol;
+            }
+            else
+            {
+                Resultado resultado = new Resultado();
+                resultado.Errores.Add("Error de autenticacion");
+                usuariologueado = null;
+            }
+
+            GuardarDirectora(ListaDirectoras);
+            GuardarClaves(ListaClaves);
+
+            return usuariologueado;
         }
         //verfica que el rol usado sea el correcto
         private Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
@@ -102,7 +160,7 @@ namespace Logica
             return Resultado;
         }
         // alta de directoras
-        public void LeerDirectoras()
+        private void LeerDirectoras()
         {
             using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
             {
@@ -116,7 +174,7 @@ namespace Logica
                 }
             }
         }
-        public void GuardarDirectora(List<Directora> listadirectora)
+        private void GuardarDirectora(List<Directora> listadirectora)
         {
             CrearArchivos();
             using (StreamWriter writer = new StreamWriter(@"C:\Datos\Directoras.txt", false))

@@ -80,7 +80,7 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)
+        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//aun en prueba
         {
             return Principal.Instacia.EliminarDirectora(id, directora, usuarioLogueado);
         }
@@ -165,9 +165,9 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public UsuarioLogueado ObtenerUsuario(string email, string clave)
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)//aun en prueba
         {
-            throw new NotImplementedException();
+            return Principal.Instacia.ObtenerUsuario(email, clave);
         }
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
