@@ -16,6 +16,7 @@ namespace Logica
         /// Singleton
         /// </summary>
         /// 
+
         private Principal() { }
 
         private static readonly Principal Instacia_Principal = new Principal();
@@ -24,9 +25,10 @@ namespace Logica
         {
             get
             {
-               return Instacia_Principal;
+                return Instacia_Principal;
             }
         }
+
         ///
         /// <summary>
         /// Propiedades
@@ -38,6 +40,7 @@ namespace Logica
         public List<Hijo> ListaHijos { get; set; }
         public List<Clave> ListaClaves { get; set; }
         //public List<Usuario> ListaUsuarios { get; set; }
+
         ///
         /// <summary>
         /// Metodos
@@ -52,7 +55,7 @@ namespace Logica
                 File.Create(@"C:\Datos\Directoras.txt").Close();
             }
             if (ListaDirectoras == null)
-            { 
+            {
                 List<Directora> ListaDirectoras = new List<Directora>();
             }
 
@@ -121,7 +124,7 @@ namespace Logica
 
         }
 
-        public UsuarioLogueado ObtenerUsuario(string email, string clave)//revisar
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)//funciona :'D
         {
             CrearArchivos();
             LeerDirectoras();
@@ -130,12 +133,14 @@ namespace Logica
             ListaUsuarios.AddRange(ListaDirectoras);
             //ListaUsuarios.AddRange(ListaDocentes);
             //ListaUsuarios.AddRange(ListaPadres);
-            Clave nuevaclave = new Clave() { Email = "lol", Password="123456", Rol=Roles.Directora};
+
+            Clave nuevaclave = new Clave() { Email = "lol", Password = "123456", Rol = Roles.Directora };//para realizar prueba de login
             ListaClaves.Add(nuevaclave);
+
             var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
             var usuario = ListaUsuarios.Where(x => x.Email == email).FirstOrDefault();
             var usuariologueado = new UsuarioLogueado();
-            if (pass != null||usuario!=null)
+            if (pass != null || usuario != null)
             {
                 usuariologueado.Nombre = usuario.Nombre;
                 usuariologueado.Apellido = usuario.Apellido;
@@ -161,13 +166,13 @@ namespace Logica
             var Resultado = new Resultado();
             if (usuariologeado.RolSeleccionado != rol)
             {
-                Resultado.Errores.Add("el rol seleccionado no es el correcto"); 
+                Resultado.Errores.Add("el rol seleccionado no es el correcto");
             }
 
             return Resultado;
         }
 
-        // alta de directoras
+        // amb's de directoras
         private void LeerDirectoras()
         {
             using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
@@ -232,9 +237,9 @@ namespace Logica
             if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
             {
                 //var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
-                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuariologueado,id));
+                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuariologueado, id));
                 ListaDirectoras.Add(directoraeditada);
-                
+
                 GuardarDirectora(ListaDirectoras);
             }
 
@@ -245,16 +250,30 @@ namespace Logica
         {
             CrearArchivos();
             LeerDirectoras();
-            if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
             {
                 //var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
-                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuarioLogueado,id));
+                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuarioLogueado, id));
 
                 GuardarDirectora(ListaDirectoras);
-            }            
+            }
             return VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
         }
-    
 
-    }
+        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            CrearArchivos();
+            LeerDirectoras();
+
+            var listagrilla = ListaDirectoras
+               .Where(x => string.IsNullOrEmpty(busquedaGlobal) || x.Nombre.Contains(busquedaGlobal) || x.Apellido.Contains(busquedaGlobal))
+               .Skip(paginaActual * totalPorPagina).Take(totalPorPagina).ToArray();
+
+            GuardarDirectora(ListaDirectoras);
+            return new Grilla<Directora>
+            {
+                Lista = listagrilla
+            };
+        }        
+    }     
 }

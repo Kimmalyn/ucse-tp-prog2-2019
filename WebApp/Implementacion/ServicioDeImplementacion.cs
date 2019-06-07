@@ -15,7 +15,7 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
+        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Funciona
         {            
             return Principal.Instacia.AltaDirectora(directora, usuarioLogueado);
         }
@@ -60,7 +60,7 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
+        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//prueba hecha - agrega archivo editado pero no elimina anterior corregir
         {
             return Principal.Instacia.EditarDirectora(id, directora, usuarioLogueado);
         }
@@ -80,7 +80,7 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//aun en prueba
+        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//prueba hecha - no elimina corregir
         {
             return Principal.Instacia.EliminarDirectora(id, directora, usuarioLogueado);
         }
@@ -115,14 +115,14 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)//tocar aca
+        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)//parece funcionar, faltan mas pruebas
         {
             return Principal.Instacia.ObtenerDirectoraPorId(usuarioLogueado,id);
         }
 
-        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)//aun en prueba
         {
-            throw new NotImplementedException();
+            return Principal.Instacia.ObtenerDirectoras(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
 
         public Docente ObtenerDocentePorId(UsuarioLogueado usuarioLogueado, int id)
@@ -165,7 +165,7 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public UsuarioLogueado ObtenerUsuario(string email, string clave)//aun en prueba
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)//parece funcionar :'D
         {
             return Principal.Instacia.ObtenerUsuario(email, clave);
         }
