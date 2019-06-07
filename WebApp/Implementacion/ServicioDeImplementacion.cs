@@ -115,9 +115,9 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)
+        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)//tocar aca
         {
-            throw new NotImplementedException();
+            return Principal.Instacia.ObtenerDirectoraPorId(usuarioLogueado,id);
         }
 
         public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)

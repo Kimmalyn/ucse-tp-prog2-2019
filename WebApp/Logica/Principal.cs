@@ -43,6 +43,7 @@ namespace Logica
         /// Metodos
         /// </summary>
         ///
+
         //CreaTodosArchivos
         private void CrearArchivos()
         {
@@ -92,6 +93,7 @@ namespace Logica
             }
 
         }
+
         //Login
         private void LeerCLaves()
         {
@@ -107,6 +109,7 @@ namespace Logica
                 }
             }
         }
+
         private void GuardarClaves(List<Clave> listaclaves)
         {
             CrearArchivos();
@@ -115,7 +118,9 @@ namespace Logica
                 string jsonClaves = JsonConvert.SerializeObject(listaclaves);
                 writer.Write(jsonClaves);
             }
+
         }
+
         public UsuarioLogueado ObtenerUsuario(string email, string clave)//revisar
         {
             CrearArchivos();
@@ -125,7 +130,8 @@ namespace Logica
             ListaUsuarios.AddRange(ListaDirectoras);
             //ListaUsuarios.AddRange(ListaDocentes);
             //ListaUsuarios.AddRange(ListaPadres);
-            
+            Clave nuevaclave = new Clave() { Email = "lol", Password="123456", Rol=Roles.Directora};
+            ListaClaves.Add(nuevaclave);
             var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
             var usuario = ListaUsuarios.Where(x => x.Email == email).FirstOrDefault();
             var usuariologueado = new UsuarioLogueado();
@@ -148,6 +154,7 @@ namespace Logica
 
             return usuariologueado;
         }
+
         //verfica que el rol usado sea el correcto
         private Resultado VerificarUsuarioLogeado(Roles rol, UsuarioLogueado usuariologeado)
         {
@@ -159,6 +166,7 @@ namespace Logica
 
             return Resultado;
         }
+
         // alta de directoras
         private void LeerDirectoras()
         {
@@ -174,6 +182,7 @@ namespace Logica
                 }
             }
         }
+
         private void GuardarDirectora(List<Directora> listadirectora)
         {
             CrearArchivos();
@@ -183,6 +192,24 @@ namespace Logica
                 writer.Write(jsonDirectoras);
             }
         }
+
+        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)
+        {
+            CrearArchivos();
+            LeerDirectoras();
+            var directora = new Directora();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
+            {
+                directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
+            }
+            else
+            {
+                directora = null;
+            }
+            GuardarDirectora(ListaDirectoras);
+            return directora;
+        }
+
         public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
@@ -196,6 +223,7 @@ namespace Logica
 
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
+
         public Resultado EditarDirectora(int id, Directora directoraeditada, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
@@ -203,23 +231,24 @@ namespace Logica
 
             if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
             {
-                var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
-                ListaDirectoras.Remove(directora);
+                //var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
+                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuariologueado,id));
                 ListaDirectoras.Add(directoraeditada);
-
+                
                 GuardarDirectora(ListaDirectoras);
             }
 
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
+
         public Resultado EliminarDirectora(int id, Directora directoraeliminada, UsuarioLogueado usuarioLogueado)
         {
             CrearArchivos();
             LeerDirectoras();
             if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
             {
-                var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
-                ListaDirectoras.Remove(directora);
+                //var directora = ListaDirectoras.Where(x => x.Id == id).FirstOrDefault();
+                ListaDirectoras.Remove(ObtenerDirectoraPorId(usuarioLogueado,id));
 
                 GuardarDirectora(ListaDirectoras);
             }            
