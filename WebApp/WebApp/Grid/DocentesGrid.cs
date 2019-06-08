@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using WebApp;
 using WebApp.Controllers;
+using Implementacion;
 
 namespace WebApp.Grid
 {
@@ -54,7 +55,7 @@ namespace WebApp.Grid
                       string globalSearch = options.GetAdditionalQueryOptionString("search");
                       UsuarioLogueado usuarioLogueado = JsonConvert.DeserializeObject<UsuarioLogueado>(options.GetPageParameterString("user"));
 
-                      IServicioWeb servicio = BaseController.CreateService();
+                      IServicioWeb servicio = new ServicioDeImplementacion(); //BaseController.CreateService();
                       var data = servicio.ObtenerDocentes(usuarioLogueado, options.PageIndex.Value, options.ItemsPerPage.Value, globalSearch);
 
 					  return new QueryResult<Docente>()

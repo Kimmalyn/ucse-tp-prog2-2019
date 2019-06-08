@@ -20,7 +20,7 @@ namespace Logica
         private Principal() { }
 
         private static readonly Principal Instacia_Principal = new Principal();
-
+        
         public static Principal Instacia
         {
             get
@@ -28,7 +28,7 @@ namespace Logica
                 return Instacia_Principal;
             }
         }
-
+        ///
         ///
         /// <summary>
         /// Propiedades
@@ -131,7 +131,7 @@ namespace Logica
             LeerClaves();
             List<Usuario> ListaUsuarios = new List<Usuario>();
             ListaUsuarios.AddRange(ListaDirectoras);
-            //ListaUsuarios.AddRange(ListaDocentes);
+            ListaUsuarios.AddRange(ListaDocentes);
             //ListaUsuarios.AddRange(ListaPadres);
 
             var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
@@ -170,7 +170,10 @@ namespace Logica
             return Resultado;
         }
 
-        // abm's de directoras
+        /// <summary>
+        /// INICIO DIRECTORA
+        /// </summary>
+
         private void LeerDirectoras()
         {
             using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
@@ -212,7 +215,7 @@ namespace Logica
             GuardarDirectora(ListaDirectoras);
             return directora;
         }
-
+        
         public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
@@ -277,6 +280,126 @@ namespace Logica
             {
                 Lista = listagrilla
             };
-        }        
-    }     
+        }
+
+        /// <summary>
+        /// FIN DIRECTORA
+        /// </summary>
+
+        /// <summary>
+        /// INICIO DOCENTE
+        /// </summary>
+
+        private void LeerDocentes()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Docentes.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaDocentes = JsonConvert.DeserializeObject<List<Docente>>(contenido);
+
+                if (ListaDocentes == null)
+                {
+                    ListaDocentes = new List<Docente>();
+                }
+            }
+        }
+
+        private void GuardarDocente(List<Docente> listadocente)
+        {
+            CrearArchivos();
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Docentes.txt", false))
+            {
+                string jsonDocentes = JsonConvert.SerializeObject(listadocente);
+                writer.Write(jsonDocentes);
+            }
+        }
+
+        public Docente ObtenerDocentePorId(UsuarioLogueado usuarioLogueado, int id)
+        {
+            CrearArchivos();
+            LeerDocentes();
+            var docente = new Docente();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
+            {
+                docente = ListaDocentes.Where(x => x.Id == id).FirstOrDefault();
+            }
+            else
+            {
+                docente = null;
+            }
+            GuardarDocente(ListaDocentes);
+            return docente;
+        }
+
+        public Resultado AltaDocente(Docente docente, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerDocentes();
+            LeerClaves();
+
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                docente.Id = ListaDocentes.Count() + 1;
+                Random rnd = new Random();
+                rnd.Next(100000, 999999);
+                ListaDocentes.Add(docente);
+                Clave pass = new Clave() { Email = docente.Email, Password = rnd.ToString(), Rol = Roles.Directora };
+                ListaClaves.Add(pass);
+                GuardarDocente(ListaDocentes);
+                GuardarClaves(ListaClaves);
+            }
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Resultado EditarDocente(int id, Docente docenteeditada, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerDocentes();
+
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var docente = ObtenerDocentePorId(usuariologueado, id);
+                ListaDocentes.Remove(docente);
+                ListaDocentes.Add(docenteeditada);
+                GuardarDocente(ListaDocentes);
+            }
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Resultado EliminarDocente(int id, Docente docenteeliminada, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerDocentes();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var docente = ObtenerDocentePorId(usuariologueado, id);
+                ListaDocentes.Remove(docente);
+                GuardarDocente(ListaDocentes);
+            }
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            CrearArchivos();
+            LeerDocentes();
+
+            var listagrilla = ListaDocentes
+               .Where(x => string.IsNullOrEmpty(busquedaGlobal) || x.Nombre.Contains(busquedaGlobal) || x.Apellido.Contains(busquedaGlobal))
+               .Skip(paginaActual * totalPorPagina).Take(totalPorPagina).ToArray();
+
+            GuardarDocente(ListaDocentes);
+            return new Grilla<Docente>
+            {
+                Lista = listagrilla
+            };
+        }
+
+        /// <summary>
+        /// FIN DOCENTE
+        /// </summary>
+    }
 }
