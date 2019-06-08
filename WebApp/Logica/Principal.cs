@@ -134,12 +134,10 @@ namespace Logica
             //ListaUsuarios.AddRange(ListaDocentes);
             //ListaUsuarios.AddRange(ListaPadres);
 
-            Clave nuevaclave = new Clave() { Email = "lol", Password = "123456", Rol = Roles.Directora };//para realizar prueba de login
-            ListaClaves.Add(nuevaclave);
-
             var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
             var usuario = ListaUsuarios.Where(x => x.Email == email).FirstOrDefault();
             var usuariologueado = new UsuarioLogueado();
+
             if (pass != null || usuario != null)
             {
                 usuariologueado.Nombre = usuario.Nombre;
@@ -222,6 +220,9 @@ namespace Logica
 
             if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
             {
+                directora.Id = ListaDirectoras.Count() + 1;
+                Clave pass = new Clave() { Email = directora.Email, Password = "", Rol = Roles.Directora };
+                ListaClaves.Add(pass);
                 ListaDirectoras.Add(directora);
                 GuardarDirectora(ListaDirectoras);
             }
