@@ -21,7 +21,7 @@ namespace Logica
 
         private static readonly Principal Instacia_Principal = new Principal();
         
-        public static Principal Instacia
+        public static Principal Instancia
         {
             get
             {
@@ -116,7 +116,7 @@ namespace Logica
         private void GuardarClaves(List<Clave> listaclaves)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Clave.txt", false))
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Claves.txt", false))
             {
                 string jsonClaves = JsonConvert.SerializeObject(listaclaves);
                 writer.Write(jsonClaves);
@@ -128,7 +128,10 @@ namespace Logica
         {
             CrearArchivos();
             LeerDirectoras();
+            LeerDocentes();
+            LeerPadres();
             LeerClaves();
+
             List<Usuario> ListaUsuarios = new List<Usuario>();
             ListaUsuarios.AddRange(ListaDirectoras);
             ListaUsuarios.AddRange(ListaDocentes);
@@ -153,6 +156,8 @@ namespace Logica
             }
 
             GuardarDirectora(ListaDirectoras);
+            GuardarDocente(ListaDocentes);
+            GuardarPadre(ListaPadres);
             GuardarClaves(ListaClaves);
 
             return usuariologueado;
@@ -164,7 +169,7 @@ namespace Logica
             var Resultado = new Resultado();
             if (usuariologeado.RolSeleccionado != rol)
             {
-                Resultado.Errores.Add("el rol seleccionado no es el correcto");
+                Resultado.Errores.Add("El rol seleccionado no es el correcto.");
             }
 
             return Resultado;
@@ -226,9 +231,9 @@ namespace Logica
             {
                 directora.Id = ListaDirectoras.Count() + 1;
                 Random rnd = new Random();
-                rnd.Next(100000, 999999);
+                var pswrd = rnd.Next(100000, 999999).ToString();
                 ListaDirectoras.Add(directora);
-                Clave pass = new Clave() { Email = directora.Email, Password = rnd.ToString(), Rol = Roles.Directora };
+                Clave pass = new Clave() { Email = directora.Email, Password = pswrd, Rol = Roles.Directora };
                 ListaClaves.Add(pass);
                 GuardarDirectora(ListaDirectoras);
                 GuardarClaves(ListaClaves);
@@ -249,6 +254,7 @@ namespace Logica
                 ListaDirectoras.Add(directoraeditada);
                 GuardarDirectora(ListaDirectoras);
             }
+
 
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
@@ -337,19 +343,20 @@ namespace Logica
             CrearArchivos();
             LeerDocentes();
             LeerClaves();
-
+            
             if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
             {
                 docente.Id = ListaDocentes.Count() + 1;
                 Random rnd = new Random();
-                rnd.Next(100000, 999999);
+                var pswrd = rnd.Next(100000, 999999).ToString();
                 ListaDocentes.Add(docente);
-                Clave pass = new Clave() { Email = docente.Email, Password = rnd.ToString(), Rol = Roles.Directora };
+                Clave pass = new Clave() { Email = docente.Email, Password = pswrd, Rol = Roles.Docente };
                 ListaClaves.Add(pass);
                 GuardarDocente(ListaDocentes);
                 GuardarClaves(ListaClaves);
-            }
 
+            }
+            
             return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
         }
 
@@ -400,6 +407,169 @@ namespace Logica
 
         /// <summary>
         /// FIN DOCENTE
+        /// </summary>
+         
+        /// <summary>
+        /// INICIO SALAS
+        /// </summary>
+
+        public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuariologueado)
+        {
+            var resultado = new Resultado();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var salasdocente = docente.Salas != null ? docente.Salas.ToList() : new List<Sala>();
+
+                if (salasdocente.Any(x => x.Id == sala.Id) == false) //Verifica que la sala agregar no este repetida
+                    salasdocente.Add(sala);
+                else
+                    resultado.Errores.Add("La sala ingresada ya está asignada al docente.");
+
+                docente.Salas = salasdocente.ToArray();
+            }
+            return resultado;
+        }
+
+        public Resultado DesasignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuariologueado)
+        {
+            var resultado = new Resultado();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var salasDocente = docente.Salas != null ? docente.Salas.ToList() : new List<Sala>();
+
+                if (salasDocente.Any(x => x.Id == sala.Id) == true) //Verifica que la sala a desasignar exista
+                    salasDocente.Remove(sala);
+                else
+                    resultado.Errores.Add("La sala ingresada no está asignada al docente.");
+
+                docente.Salas = salasDocente.ToArray();
+            }
+            return resultado;
+        }
+
+        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// FIN SALAS
+        /// </summary>
+
+        /// <summary>
+        /// INICIO PADRES
+        /// </summary>
+
+        private void LeerPadres()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Padres.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaPadres = JsonConvert.DeserializeObject<List<Padre>>(contenido);
+
+                if (ListaPadres == null)
+                {
+                    ListaPadres = new List<Padre>();
+                }
+            }
+        }
+
+        private void GuardarPadre(List<Padre> listapadre)
+        {
+            CrearArchivos();
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Padres.txt", false))
+            {
+                string jsonPadres = JsonConvert.SerializeObject(listapadre);
+                writer.Write(jsonPadres);
+            }
+        }
+
+        public Padre ObtenerPadrePorId(UsuarioLogueado usuarioLogueado, int id)
+        {
+            CrearArchivos();
+            LeerPadres();
+            var padre = new Padre();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
+            {
+                padre = ListaPadres.Where(x => x.Id == id).FirstOrDefault();
+            }
+            else
+            {
+                padre = null;
+            }
+            GuardarPadre(ListaPadres);
+            return padre;
+        }
+
+        public Resultado AltaPadre(Padre padre, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+            LeerClaves();
+
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                padre.Id = ListaPadres.Count() + 1;
+                Random rnd = new Random();
+                var pswrd = rnd.Next(100000, 999999).ToString();
+                ListaPadres.Add(padre);
+                Clave pass = new Clave() { Email = padre.Email, Password = pswrd, Rol = Roles.Padre };
+                ListaClaves.Add(pass);
+                GuardarPadre(ListaPadres);
+                GuardarClaves(ListaClaves);
+            }
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Resultado EditarPadre(int id, Padre padreeditado, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var padre = ObtenerPadrePorId(usuariologueado, id);
+                ListaPadres.Remove(padre);
+                ListaPadres.Add(padreeditado);
+                GuardarPadre(ListaPadres);
+            }
+
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Resultado EliminarPadre(int id, Padre padreeliminado, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                var padre = ObtenerPadrePorId(usuariologueado, id);
+                ListaPadres.Remove(padre);
+                GuardarPadre(ListaPadres);
+            }
+            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+        }
+
+        public Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            CrearArchivos();
+            LeerPadres();
+
+            var listagrilla = ListaPadres
+               .Where(x => string.IsNullOrEmpty(busquedaGlobal) || x.Nombre.Contains(busquedaGlobal) || x.Apellido.Contains(busquedaGlobal))
+               .Skip(paginaActual * totalPorPagina).Take(totalPorPagina).ToArray();
+
+            GuardarPadre(ListaPadres);
+            return new Grilla<Padre>
+            {
+                Lista = listagrilla
+            };
+        }
+
+        /// <summary>
+        /// FIN PADRES
         /// </summary>
     }
 }

@@ -36,3 +36,8 @@ REFERNECIAS:
 	SERVICIOS -------> Contratos
 
 skip(n).take(size) n=1 * size= 10 (pasa diez paginas)
+
+
+Directora	Pueden hacer todos los ABM
+Docente	Solo ABM de notas
+Padre	Comentarios y leer notas
