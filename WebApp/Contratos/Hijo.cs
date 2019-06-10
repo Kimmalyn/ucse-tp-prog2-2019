@@ -8,5 +8,6 @@ namespace Contratos
         public DateTime FechaNacimiento { get; set; }
         public int ResultadoUltimaEvaluacionAnual { get; set; }
         public Sala Sala { get; set; }
+        public Nota[] Notas { get; set; }
     }
 }
