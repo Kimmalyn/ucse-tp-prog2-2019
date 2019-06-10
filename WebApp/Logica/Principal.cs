@@ -169,7 +169,7 @@ namespace Logica
             var Resultado = new Resultado();
             if (usuariologeado.RolSeleccionado != rol)
             {
-                Resultado.Errores.Add("El rol seleccionado no es el correcto.");
+                Resultado.Errores.Add("No se tienen los permisos necesarios para realizar esta acción.");
             }
 
             return Resultado;
@@ -227,7 +227,8 @@ namespace Logica
             LeerDirectoras();
             LeerClaves();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 directora.Id = ListaDirectoras.Count() + 1;
                 Random rnd = new Random();
@@ -239,7 +240,7 @@ namespace Logica
                 GuardarClaves(ListaClaves);
             }
 
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EditarDirectora(int id, Directora directoraeditada, UsuarioLogueado usuariologueado)
@@ -247,7 +248,8 @@ namespace Logica
             CrearArchivos();
             LeerDirectoras();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var directora = ObtenerDirectoraPorId(usuariologueado, id);
                 ListaDirectoras.Remove(directora);
@@ -256,20 +258,21 @@ namespace Logica
             }
 
 
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EliminarDirectora(int id, Directora directoraeliminada, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
             LeerDirectoras();
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var directora = ObtenerDirectoraPorId(usuariologueado, id);
                 ListaDirectoras.Remove(directora);
                 GuardarDirectora(ListaDirectoras);
             }
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
@@ -343,8 +346,9 @@ namespace Logica
             CrearArchivos();
             LeerDocentes();
             LeerClaves();
-            
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 docente.Id = ListaDocentes.Count() + 1;
                 Random rnd = new Random();
@@ -357,7 +361,7 @@ namespace Logica
 
             }
             
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EditarDocente(int id, Docente docenteeditada, UsuarioLogueado usuariologueado)
@@ -365,7 +369,8 @@ namespace Logica
             CrearArchivos();
             LeerDocentes();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var docente = ObtenerDocentePorId(usuariologueado, id);
                 ListaDocentes.Remove(docente);
@@ -373,20 +378,21 @@ namespace Logica
                 GuardarDocente(ListaDocentes);
             }
 
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EliminarDocente(int id, Docente docenteeliminada, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
             LeerDocentes();
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var docente = ObtenerDocentePorId(usuariologueado, id);
                 ListaDocentes.Remove(docente);
                 GuardarDocente(ListaDocentes);
             }
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
@@ -508,7 +514,8 @@ namespace Logica
             LeerPadres();
             LeerClaves();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 padre.Id = ListaPadres.Count() + 1;
                 Random rnd = new Random();
@@ -520,7 +527,7 @@ namespace Logica
                 GuardarClaves(ListaClaves);
             }
 
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EditarPadre(int id, Padre padreeditado, UsuarioLogueado usuariologueado)
@@ -528,7 +535,8 @@ namespace Logica
             CrearArchivos();
             LeerPadres();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var padre = ObtenerPadrePorId(usuariologueado, id);
                 ListaPadres.Remove(padre);
@@ -536,20 +544,22 @@ namespace Logica
                 GuardarPadre(ListaPadres);
             }
 
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Resultado EliminarPadre(int id, Padre padreeliminado, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
             LeerPadres();
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+
+            Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (verificacion.EsValido)
             {
                 var padre = ObtenerPadrePorId(usuariologueado, id);
                 ListaPadres.Remove(padre);
                 GuardarPadre(ListaPadres);
             }
-            return VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            return verificacion;
         }
 
         public Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
