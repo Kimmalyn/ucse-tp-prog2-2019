@@ -9,8 +9,6 @@ LOGIN
 		Verificar que las credenciales sean correctas. Si las credenciales existen, se autentica el usuario.
 		No se tiene que devolver la clave del uusario logueado.
 	
-	
-	
 	AUTORIZACION (Metodo 2)
 		Solo ocurre si el usuario ya fue autenticado. Verifica si el usuario tiene permiso para acceder.
 		En caso de que falle, retornar que no se tienen permisos.
