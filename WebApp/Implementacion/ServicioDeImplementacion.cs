@@ -15,14 +15,14 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
+        public Resultado AltaDirectora(Directora directora, UsuarioLogueado usuarioLogueado) //Funciona
         {            
-            return Principal.Instacia.NuevaDirectora(directora, usuarioLogueado);
+            return Principal.Instancia.AltaDirectora(directora, usuarioLogueado);
         }
 
-        public Resultado AltaDocente(Docente docente, UsuarioLogueado usuarioLogueado)
+        public Resultado AltaDocente(Docente docente, UsuarioLogueado usuarioLogueado) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.AltaDocente(docente, usuarioLogueado);
         }
 
         public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)
@@ -32,12 +32,12 @@ namespace Implementacion
 
         public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.AltaPadre(padre, usuarioLogueado);
         }
 
         public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.AsignarDocenteSala(docente, sala, usuarioLogueado);
         }
 
         public Resultado AsignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)
@@ -47,7 +47,7 @@ namespace Implementacion
 
         public Resultado DesasignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.DesasignarDocenteSala(docente, sala, usuarioLogueado);
         }
 
         public Resultado DesasignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)
@@ -60,19 +60,19 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)//Aun en Prueba
+        public Resultado EditarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado) //Funciona
         {
-            return Principal.Instacia.EditarDirectora(id, directora, usuarioLogueado);
+            return Principal.Instancia.EditarDirectora(id, directora, usuarioLogueado);
         }
 
-        public Resultado EditarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado)
+        public Resultado EditarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.EditarDocente(id, docente, usuarioLogueado);
         }
 
         public Resultado EditarPadreMadre(int id, Padre padre, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.EditarPadre(id, padre, usuarioLogueado);
         }
 
         public Resultado EliminarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado)
@@ -80,19 +80,19 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado)
+        public Resultado EliminarDirectora(int id, Directora directora, UsuarioLogueado usuarioLogueado) //Funciona
         {
-            return Principal.Instacia.EliminarDirectora(id, directora, usuarioLogueado);
+            return Principal.Instancia.EliminarDirectora(id, directora, usuarioLogueado);
         }
 
-        public Resultado EliminarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado)
+        public Resultado EliminarDocente(int id, Docente docente, UsuarioLogueado usuarioLogueado) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.EliminarDocente(id, docente, usuarioLogueado);
         }
 
         public Resultado EliminarPadreMadre(int id, Padre padre, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.EliminarPadre(id, padre, usuarioLogueado);
         }
 
         public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)
@@ -115,24 +115,24 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)
+        public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerDirectoraPorId(usuarioLogueado,id);
         }
 
-        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        public Grilla<Directora> ObtenerDirectoras(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerDirectoras(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
 
-        public Docente ObtenerDocentePorId(UsuarioLogueado usuarioLogueado, int id)
+        public Docente ObtenerDocentePorId(UsuarioLogueado usuarioLogueado, int id) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerDocentePorId(usuarioLogueado, id);
         }
 
-        public Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        public Grilla<Docente> ObtenerDocentes(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal) //Funciona
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerDocentes(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
 
         public Institucion[] ObtenerInstituciones()
@@ -147,12 +147,12 @@ namespace Implementacion
 
         public Padre ObtenerPadrePorId(UsuarioLogueado usuarioLogueado, int id)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerPadrePorId(usuarioLogueado, id);
         }
 
         public Grilla<Padre> ObtenerPadres(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerPadres(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
 
         public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)
@@ -165,9 +165,9 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public UsuarioLogueado ObtenerUsuario(string email, string clave)
+        public UsuarioLogueado ObtenerUsuario(string email, string clave)//parece funcionar :'D
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerUsuario(email, clave);
         }
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)

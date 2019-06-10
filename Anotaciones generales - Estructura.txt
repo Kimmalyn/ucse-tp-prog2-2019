@@ -7,8 +7,7 @@ Al momento de testear y probar usar Mock. Para probar cierto modulo, cambiar el 
 LOGIN
 	AUTENTICACIÓN (Metodo 1)
 		Verificar que las credenciales sean correctas. Si las credenciales existen, se autentica el usuario.
-		No se tiene que devolver la clave del uusario logueado.
-	
+		No se tiene que devolver la clave del usario logueado.	
 	AUTORIZACION (Metodo 2)
 		Solo ocurre si el usuario ya fue autenticado. Verifica si el usuario tiene permiso para acceder.
 		En caso de que falle, retornar que no se tienen permisos.
@@ -37,3 +36,8 @@ REFERNECIAS:
 	SERVICIOS -------> Contratos
 
 skip(n).take(size) n=1 * size= 10 (pasa diez paginas)
+
+
+Directora	Pueden hacer todos los ABM
+Docente	Solo ABM de notas
+Padre	Comentarios y leer notas
