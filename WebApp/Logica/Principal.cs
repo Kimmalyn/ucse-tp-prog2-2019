@@ -40,6 +40,7 @@ namespace Logica
         public List<Hijo> ListaHijos { get; set; }
         public List<Clave> ListaClaves { get; set; }
         //public List<Usuario> ListaUsuarios { get; set; }
+        public List<Sala> ListaSalas { get; set; }
 
         ///
         /// <summary>
@@ -95,6 +96,15 @@ namespace Logica
                 List<Clave> ListaClaves = new List<Clave>();
             }
 
+            if (!File.Exists(@"C:\Datos\Salas.txt"))
+            {
+                File.Create(@"C:\Datos\Salas.txt").Close();
+            }
+            if (ListaDirectoras == null)
+            {
+                List<Sala> ListaSalas = new List<Sala>();
+            }
+
         }
 
         //Login
@@ -112,7 +122,7 @@ namespace Logica
                 }
             }
         }
-
+        
         private void GuardarClaves(List<Clave> listaclaves)
         {
             CrearArchivos();
@@ -414,10 +424,25 @@ namespace Logica
         /// <summary>
         /// FIN DOCENTE
         /// </summary>
-         
+
         /// <summary>
         /// INICIO SALAS
         /// </summary>
+        
+        private void LeerSalas()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Salas.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaSalas = JsonConvert.DeserializeObject<List<Sala>>(contenido);
+
+                if (ListaSalas == null)
+                {
+                    ListaSalas = new List<Sala>();
+                }
+            }
+        }
 
         public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuariologueado)
         {
@@ -432,6 +457,9 @@ namespace Logica
                     resultado.Errores.Add("La sala ingresada ya está asignada al docente.");
 
                 docente.Salas = salasdocente.ToArray();
+
+                EditarDocente(docente.Id, docente, usuariologueado); //Modifica el docente asignandole las salas
+                GuardarDocente(ListaDocentes);
             }
             return resultado;
         }
@@ -449,13 +477,34 @@ namespace Logica
                     resultado.Errores.Add("La sala ingresada no está asignada al docente.");
 
                 docente.Salas = salasDocente.ToArray();
+
+                EditarDocente(docente.Id, docente, usuariologueado); //Modifica el docente desasignandole las salas
+                GuardarDocente(ListaDocentes);
             }
             return resultado;
         }
 
-        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)
+        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuariologueado)
         {
-            throw new NotImplementedException();
+            CrearArchivos();
+            LeerDocentes();
+            LeerSalas();
+
+            Sala[] lista_salas = null; 
+
+            //Resultado verificacion = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+            if (usuariologueado.RolSeleccionado == Roles.Directora)
+            {
+                lista_salas = ListaSalas.ToArray();
+            }
+            else if (usuariologueado.RolSeleccionado == Roles.Docente)
+            {
+                Docente maestra = ListaDocentes.Where(x => x.Email == usuariologueado.Email &&
+                x.Apellido == usuariologueado.Apellido).FirstOrDefault();
+                Sala nuevasala = new Sala();
+                lista_salas = maestra.Salas;
+            }
+            return lista_salas;
         }
 
         /// <summary>

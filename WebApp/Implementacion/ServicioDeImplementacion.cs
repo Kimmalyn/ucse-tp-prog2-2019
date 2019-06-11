@@ -162,7 +162,7 @@ namespace Implementacion
 
         public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ObtenerSalasPorInstitucion(usuarioLogueado);
         }
 
         public UsuarioLogueado ObtenerUsuario(string email, string clave)//parece funcionar :'D

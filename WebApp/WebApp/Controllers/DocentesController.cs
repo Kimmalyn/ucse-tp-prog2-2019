@@ -17,7 +17,7 @@ namespace AnBem.WebApplication.Controllers
     
     public class DocentesController : BaseController
     {
-        private static IServicioWeb servicio = new Implementacion.ServicioDeImplementacion();
+        private static IServicioWeb servicio = new Implementacion.ServicioDeImplementacion(); //new Mocks.MockService(); 
         // GET: /Docentes/
         [HttpGet]
         public async Task<ActionResult> Index()
