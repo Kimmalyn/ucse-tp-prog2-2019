@@ -10084,3 +10084,61 @@ table.webgrid thead th.sort-ASC a, table.webgrid thead th.sort-DESC a {
             }
 
 
+
+
+
+.feed-element {
+    margin: 0;
+    padding: 15px 5px;
+}
+
+    .feed-element.new .publishedBy, .feed-element.new .feed-summary {
+        font-weight: bold;
+    }
+
+
+
+    .feed-element:hover, .feed-element.active, .feed-element:hover .text-muted, .feed-element.active .text-muted {
+        background: #1ab394;
+        cursor: pointer;
+        color: #FFF;
+    }
+
+.feed-detail .Bubble1 p {
+    margin: 0;
+}
+
+.feed-detail .Bubble-Comment {
+    margin-top: 10px;
+}
+
+.feed-detail .Bubble1 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    background: #FFF;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.students-vertical .list-group-item {
+    float:left;
+    width:100%;
+}
+
+    .students-vertical .list-group-item a {
+        float: left;
+        display: block;
+        width: 100%;
+    }
+
+    .students-vertical .list-group-item img {
+        float: left;
+    }
+
+    .students-vertical .list-group-item h3 {
+        float: left;
+        line-height: 40px;
+        padding-left: 15px;
+    }

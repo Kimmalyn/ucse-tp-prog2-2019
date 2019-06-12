@@ -130,6 +130,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlumnosController.cs" />
+    <Compile Include="Controllers\CuadernoController.cs" />
     <Compile Include="Controllers\PadresController.cs" />
     <Compile Include="Controllers\DocentesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -195,6 +196,9 @@
     <Content Include="Views\Alumnos\Form.cshtml" />
     <Content Include="Views\Docentes\Assign.cshtml" />
     <Content Include="Views\Padres\Assign.cshtml" />
+    <Content Include="Views\Cuaderno\Index.cshtml" />
+    <Content Include="Views\Cuaderno\Book.cshtml" />
+    <Content Include="Views\Cuaderno\CrearNotas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Contratos\Contratos.csproj">

@@ -64,6 +64,16 @@
                 </div>
             }
 
+            @if (TempData["Ok"] != null && TempData["Ok"] is Contratos.Resultado)
+            {
+                Contratos.Resultado resultado = TempData["Ok"] as Contratos.Resultado;
+
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Atención!</strong> La acción se realizó correctamente.
+                </div>
+            }
+
             @RenderBody()
 
             <!-- Footer -->
@@ -80,6 +90,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="~/Scripts/moment-with-locales.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     @Scripts.Render("~/bundles/inspinia")
 
@@ -89,12 +100,12 @@
                 locale: 'es',
                 format: 'DD/MM/YYYY'
             });
-            
+
             $(".perfil-menu").click(function () {
                 $(this).parent().toggleClass("open");
-            })            
+            })
         })
-        
+
     </script>
 
     <script src="~/MVCGridHandler.axd/script.js"></script>

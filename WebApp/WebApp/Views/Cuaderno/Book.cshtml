@@ -1,0 +1,175 @@
+﻿@model Contratos.Hijo
+@{
+    ViewBag.Title = "Cuaderno de comunicaciones de " + Model.Apellido + " " + Model.Nombre;
+    Contratos.UsuarioLogueado usuarioLogueado = ViewBag.User as Contratos.UsuarioLogueado;
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>Notas</h5>
+            </div>
+            @if (Model.Notas.Any(x => !x.Leida))
+            {
+                <div class="ibox-content ibox-heading">
+                    <h3><i class="fa fa-envelope-o"></i> Tiene notas sin leer</h3>
+                    <small><i class="fa fa-tim"></i> Tiene <strong id="cantidadNotas">@Model.Notas.Count(x => !x.Leida) nota@(Model.Notas.Count(x=>!x.Leida) > 1 ? "s":"")</strong> sin leer en el cuaderno.</small>
+                </div>
+            }
+            <div class="ibox-content" style="overflow:auto;max-height:600px;">
+                <div class="feed-activity-list">
+                    @foreach (var item in Model.Notas)
+                    {
+                        <div class="feed-element @(!item.Leida ? "new": "")" id="content-@item.Id" data-contentid="@item.Id" data-detail="#content-detail-@item.Id">
+                            <div>
+                                <div>
+                                    <span class="publishedBy">
+                                        <span style="font-size:16px">@item.Titulo</span>&nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        @foreach (var item in Model.Notas)
+        {
+            <div id="content-detail-@item.Id" class="feed-detail hide">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5 class="btn-block">
+                            @item.Titulo
+                            <span class="text-muted pull-right top-date">
+                                @if (item.Leida)
+                                {
+                                    <span title="Nota leída" class="text-info content-12"><i class="fa fa-check"></i><i class="fa fa-check"></i></span>
+                                }
+                                else
+                                {
+                                    if (usuarioLogueado.RolSeleccionado == Contratos.Roles.Padre)
+                                    {
+                                        <a class="btn btn-xs btn-warning" href="javascript:void(0)" onclick="marcarLeida(@item.Id)">Marcar como leída</a>   
+                                    }
+                                }
+                            </span>
+                        </h5>
+                    </div>
+                    <div class="ibox-content">
+                        @item.Descripcion
+                        <div>
+                            <hr>
+                            <h4>Comentarios</h4>
+                        </div>
+                        <div class="comments">
+                            @foreach (var comentario in item.Comentarios.OrderBy(p=>p.Fecha))
+                            {
+                                <div>
+                                    <em>@comentario.Fecha.ToShortDateString() @comentario.Fecha.ToShortTimeString() - por @comentario.Usuario.Apellido @comentario.Usuario.Nombre</em><br />
+                                    <p>@comentario.Mensaje</p>
+                                    <hr />
+                                </div>
+                            }
+                        </div>
+                        <div class="text-right">
+                            <a class="btn btn-sm btn-white" href="javascript:void(0)" onclick="responderNota(@item.Id)"><i class="fa fa-reply"></i> Responder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+
+    <script>
+        function marcarLeida(id) {
+            bootbox.confirm({
+                message: "Está seguro que desea marcar la nota como leída?",
+                buttons: {
+                    confirm: {
+                        label: 'Si',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.post('@Url.Action("MarcarLeida")/' + id, function () {
+                            window.location.reload();
+                        })
+                    }
+                }
+            });
+        }
+
+        function responderNota(id) {
+            bootbox.prompt("Ingrese su comentario", function (result) {
+                if (result != '') {
+                    var data = new Array();
+                    data.push({ name: 'mensaje', value: result });
+                    $.post('@Url.Action("ResponderNota")/' + id, data, function (data) {
+                        window.location.reload();
+                    })
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var isParent = 'False'.toLowerCase() == "true";
+
+            $(".feed-element").click(function () {
+                $(".feed-element.active").removeClass("active");
+                $(this).addClass("active");
+                $(".feed-detail").addClass("hide");
+                $($(this).attr("data-detail")).removeClass("hide");
+
+                document.location.hash = $(this).attr("data-detail");
+
+                if (isParent && $(this).hasClass("new")) {
+                    var data = new Array();
+
+                    var contentId = $(this).attr("data-contentId");
+
+                    data.push({ name: 'contentId', value: contentId });
+                    data.push({ name: 'studentId', value: $("#studentId").val() });
+                    var e = this;
+                    //$(".text-info.content-" + contentId).html('<i class="fa fa-check"></i><i class="fa fa-check"></i>');
+
+                    $.post('/easyKinder/Book/UpdateAck', data, function () {
+                        $(e).removeClass("new");
+                        var cantidad = $(".feed-element.new").length;
+                        $("#cantidadNotas").html(cantidad + " notas");
+
+                        if (cantidad == 0) {
+                            $(".notas-no-leidas").remove();
+                        }
+
+                        $(".text-info.content-" + contentId).removeClass("hide");
+                    })
+                }
+            })
+
+            setByHash();
+        })
+
+        function setByHash() {
+            var h = document.location.hash;
+            if (h != "") {
+                $(".feed-element[data-detail='" + h + "']").click();
+            }
+        }
+        
+    </script>
+
+}

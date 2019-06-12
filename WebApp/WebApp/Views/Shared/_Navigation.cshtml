@@ -16,7 +16,17 @@
                     IN+
                 </div>
             </li>
-
+            <li>
+                <a href="#"><i class="fa fa-book"></i> <span class="nav-label">Cuaderno</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li class="">
+                        <a href="@Url.Action("Index","Cuaderno")"><span class="nav-label">Consulta</span></a>
+                    </li>
+                    <li class="">
+                        <a href="@Url.Action("CrearNotas","Cuaderno")"><span class="nav-label">Crear nota</span></a>
+                    </li>
+                </ul>
+            </li>
             @if (loggedUser.RolSeleccionado == Contratos.Roles.Directora)
             {
                 <li>
@@ -35,7 +45,7 @@
                             <a href="@Url.Action("Index", "Alumnos")"><i class="fa fa-user-circle"></i> <span class="nav-label">ABM Alumnos</span></a>
                         </li>
                     </ul>
-                </li>                
+                </li>
             }
         </ul>
     </div>

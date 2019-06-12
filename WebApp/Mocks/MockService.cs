@@ -41,12 +41,36 @@ namespace Mocks
             new Padre(){ Id = 11, Nombre = "P 11", Apellido = "PA 11", Email = "PE 11"},new Padre(){ Id = 12, Nombre = "P 12", Apellido = "PA 12", Email = "PE 12"},
         };
 
+        public static List<Nota> _notas1 = new List<Nota>()
+        {
+            new Nota(){ Id = 1, Leida = false, Titulo= "Nota 1", Descripcion = "Descripcion de la nota 1", Comentarios = new Comentario[]{ } },
+            new Nota(){ Id = 2, Leida = false, Titulo= "Nota 2", Descripcion = "Descripcion de la nota 2", Comentarios = new Comentario[]{
+                new Comentario() { Fecha = DateTime.Now.AddDays(-2), Mensaje = "Comentario 1" , Usuario = new Usuario(){ Nombre = "Usuario", Apellido="Cualquiera" } },
+                new Comentario() { Fecha = DateTime.Now.AddDays(-1), Mensaje = "Comentario 2" , Usuario = new Usuario(){ Nombre = "Usuario", Apellido="Cualquiera 2" } },
+            } }
+        };
+
+        public static List<Nota> _notas2 = new List<Nota>()
+        {
+            new Nota(){ Id = 3, Leida = true, Titulo= "Nota 3", Descripcion = "Descripcion de la nota 3", Comentarios = new Comentario[]{ } },            
+        };
+
+        public static List<Nota> _notas3 = new List<Nota>()
+        {
+            new Nota(){ Id = 4, Leida = false, Titulo= "Nota 4", Descripcion = "Descripcion de la nota 4", Comentarios = new Comentario[]{ } },            
+        };
+
+        public static List<Nota> _notas4 = new List<Nota>()
+        {
+            new Nota(){ Id = 5, Leida = true, Titulo= "Nota 5", Descripcion = "Descripcion de la nota 5", Comentarios = new Comentario[]{ } },
+        };
+
         public static List<Hijo> _alumnos = new List<Hijo>()
         {
-            new Hijo(){ Id = 1, Nombre = "AL 1", Apellido="AP 1", Email="APE 1", FechaNacimiento = new DateTime(1990,5,4), ResultadoUltimaEvaluacionAnual = 10},
-            new Hijo(){ Id = 2, Nombre = "AL 2", Apellido="AP 2", Email="APE 2", FechaNacimiento = new DateTime(1991,3,20), ResultadoUltimaEvaluacionAnual = 6},
-            new Hijo(){ Id = 3, Nombre = "AL 3", Apellido="AP 3", Email="APE 3", FechaNacimiento = new DateTime(1992,12,14), ResultadoUltimaEvaluacionAnual = 5},
-            new Hijo(){ Id = 4, Nombre = "AL 4", Apellido="AP 4", Email="APE 4", FechaNacimiento = new DateTime(1989,11,29), ResultadoUltimaEvaluacionAnual = 3},
+            new Hijo(){ Id = 1, Nombre = "AL 1", Apellido="AP 1", Email="APE 1", FechaNacimiento = new DateTime(1990,5,4), ResultadoUltimaEvaluacionAnual = 10, Sala = new Sala(){ Id = 1 }, Notas = _notas1.ToArray() },
+            new Hijo(){ Id = 2, Nombre = "AL 2", Apellido="AP 2", Email="APE 2", FechaNacimiento = new DateTime(1991,3,20), ResultadoUltimaEvaluacionAnual = 6, Sala = new Sala(){ Id = 2 }, Notas = _notas2.ToArray()},
+            new Hijo(){ Id = 3, Nombre = "AL 3", Apellido="AP 3", Email="APE 3", FechaNacimiento = new DateTime(1992,12,14), ResultadoUltimaEvaluacionAnual = 5, Sala = new Sala(){ Id = 2 }, Notas = _notas3.ToArray()},
+            new Hijo(){ Id = 4, Nombre = "AL 4", Apellido="AP 4", Email="APE 4", FechaNacimiento = new DateTime(1989,11,29), ResultadoUltimaEvaluacionAnual = 3, Sala = new Sala(){ Id = 3 }, Notas = _notas4.ToArray()},
         };
 
         public static List<Sala> _salas = new List<Sala>()
@@ -82,7 +106,37 @@ namespace Mocks
 
         public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            if (hijos != null && hijos.Length > 0)
+            {
+                foreach (var item in hijos)
+                {
+                    var hijo = _alumnos.Single(x => x.Id == item.Id);
+                    var notasHijo = hijo.Notas == null ? new List<Nota>() : hijo.Notas.ToList();
+
+                    notasHijo.Add(nota);
+
+                    hijo.Notas = notasHijo.ToArray();
+                }
+            }
+            else
+            {
+                List<Hijo> alumnos = new List<Hijo>();
+                foreach (var sala in salas)
+                {
+                    alumnos.AddRange(_alumnos.Where(x => x.Sala.Id == sala.Id));
+                }
+
+                foreach (var item in alumnos)
+                {
+                    var notasHijo = item.Notas == null ? new List<Nota>() : item.Notas.ToList();
+
+                    notasHijo.Add(nota);
+
+                    item.Notas = notasHijo.ToArray();                    
+                }
+            }
+
+            return new Resultado();
         }
 
         public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)
@@ -203,7 +257,13 @@ namespace Mocks
 
         public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            var _notas = _notas1.Union(_notas2).Union(_notas3).Union(_notas4);
+
+            var n = _notas.Single(x => x.Id == nota.Id);
+
+            n.Leida = true;
+
+            return new Resultado();
         }
 
         public Hijo ObtenerAlumnoPorId(UsuarioLogueado usuarioLogueado, int id)
@@ -224,7 +284,7 @@ namespace Mocks
 
         public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return _alumnos.Single(x => x.Id == idPersona).Notas;
         }
 
         public Directora ObtenerDirectoraPorId(UsuarioLogueado usuarioLogueado, int id)
@@ -286,12 +346,22 @@ namespace Mocks
 
         public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            switch (usuarioLogueado.RolSeleccionado)
+            {
+                case Roles.Padre:
+                    return _alumnos.Where(x => x.Id == 1 || x.Id == 2).ToArray();
+                case Roles.Directora:
+                    return _alumnos.ToArray();
+                case Roles.Docente:
+                    return _alumnos.Where(x => x.Sala.Id == 2 || x.Sala.Id == 4).ToArray();
+                default:
+                    throw new Exception("Rol no implementado");                    
+            }
         }
 
         public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)
         {
-            return _salas.ToArray();
+            return usuarioLogueado.RolSeleccionado == Roles.Docente ? _salas.Where(x=>x.Id == 2 || x.Id == 3).ToArray() : _salas.ToArray();
         }
 
         public UsuarioLogueado ObtenerUsuario(string email, string clave)
@@ -313,7 +383,15 @@ namespace Mocks
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            var _notas = _notas1.Union(_notas2).Union(_notas3).Union(_notas4);
+
+            var n = _notas.Single(x => x.Id == nota.Id);
+            var comentarios = n.Comentarios == null ? new List<Comentario>() : n.Comentarios.ToList();
+            comentarios.Add(nuevoComentario);
+
+            n.Comentarios = comentarios.ToArray();
+
+            return new Resultado();
         }
     }
 }

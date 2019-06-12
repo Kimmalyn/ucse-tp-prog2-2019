@@ -13,7 +13,7 @@ namespace Logica
     {
         ///
         /// <summary>
-        /// Singleton
+        /// SINGLETON
         /// </summary>
         /// 
 
@@ -28,24 +28,24 @@ namespace Logica
                 return Instacia_Principal;
             }
         }
-        ///
-        ///
+
         /// <summary>
-        /// Propiedades
+        /// PROPIEDADES
         /// </summary>
-        /// 
+
         public List<Directora> ListaDirectoras { get; set; }
         public List<Docente> ListaDocentes { get; set; }
         public List<Padre> ListaPadres { get; set; }
         public List<Hijo> ListaHijos { get; set; }
         public List<Clave> ListaClaves { get; set; }
-        //public List<Usuario> ListaUsuarios { get; set; }
+        public List<Nota> ListaNotas { get; set; }
+        public List<Sala> ListaSalas { get; set; }
 
-        ///
+
         /// <summary>
-        /// Metodos
+        /// METODOS
         /// </summary>
-        ///
+
 
         //CreaTodosArchivos
         private void CrearArchivos()
@@ -77,9 +77,9 @@ namespace Logica
                 List<Padre> ListaPadres = new List<Padre>();
             }
 
-            if (!File.Exists(@"C:\Datos\Alumnos.txt"))
+            if (!File.Exists(@"C:\Datos\Hijos.txt"))
             {
-                File.Create(@"C:\Datos\Alumnos.txt").Close();
+                File.Create(@"C:\Datos\Hijos.txt").Close();
             }
             if (ListaHijos == null)
             {
@@ -93,6 +93,24 @@ namespace Logica
             if (ListaClaves == null)
             {
                 List<Clave> ListaClaves = new List<Clave>();
+            }
+
+            if (!File.Exists(@"C:\Datos\Salas.txt"))
+            {
+                File.Create(@"C:\Datos\Salas.txt").Close();
+            }
+            if (ListaDirectoras == null)
+            {
+                List<Sala> ListaSalas = new List<Sala>();
+            }
+
+            if (!File.Exists(@"C:\Datos\Notas.txt"))
+            {
+                File.Create(@"C:\Datos\Notas.txt").Close();
+            }
+            if (ListaNotas == null)
+            {
+                List<Nota> ListaNotas = new List<Nota>();
             }
 
         }
@@ -112,7 +130,7 @@ namespace Logica
                 }
             }
         }
-
+        
         private void GuardarClaves(List<Clave> listaclaves)
         {
             CrearArchivos();
@@ -135,7 +153,7 @@ namespace Logica
             List<Usuario> ListaUsuarios = new List<Usuario>();
             ListaUsuarios.AddRange(ListaDirectoras);
             ListaUsuarios.AddRange(ListaDocentes);
-            //ListaUsuarios.AddRange(ListaPadres);
+            ListaUsuarios.AddRange(ListaPadres);
 
             var pass = ListaClaves.Where(x => x.Email == email && x.Password == clave).FirstOrDefault();
             var usuario = ListaUsuarios.Where(x => x.Email == email).FirstOrDefault();
@@ -414,10 +432,25 @@ namespace Logica
         /// <summary>
         /// FIN DOCENTE
         /// </summary>
-         
+        
         /// <summary>
         /// INICIO SALAS
         /// </summary>
+        
+        private void LeerSalas()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Salas.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaSalas = JsonConvert.DeserializeObject<List<Sala>>(contenido);
+
+                if (ListaSalas == null)
+                {
+                    ListaSalas = new List<Sala>();
+                }
+            }
+        }
 
         public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuariologueado)
         {
@@ -432,6 +465,9 @@ namespace Logica
                     resultado.Errores.Add("La sala ingresada ya está asignada al docente.");
 
                 docente.Salas = salasdocente.ToArray();
+
+                EditarDocente(docente.Id, docente, usuariologueado); //Modifica el docente asignandole las salas
+                GuardarDocente(ListaDocentes);
             }
             return resultado;
         }
@@ -449,13 +485,33 @@ namespace Logica
                     resultado.Errores.Add("La sala ingresada no está asignada al docente.");
 
                 docente.Salas = salasDocente.ToArray();
+
+                EditarDocente(docente.Id, docente, usuariologueado); //Modifica el docente desasignandole las salas
+                GuardarDocente(ListaDocentes);
             }
             return resultado;
         }
 
-        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)
+        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuariologueado)
         {
-            throw new NotImplementedException();
+
+            CrearArchivos();
+            LeerDocentes();
+            LeerSalas();
+            Sala[] lista_salas = null;
+            //Resultado verificacion = verificarusuarioLogeado(Roles.Directora, usuariologueado); 
+            if (usuariologueado.RolSeleccionado == Roles.Directora)
+            {
+                lista_salas = ListaSalas.ToArray();
+            }
+            else if (usuariologueado.RolSeleccionado == Roles.Docente)
+            {
+                Docente maestra = ListaDocentes.Where(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido).FirstOrDefault();
+                Sala nuevasala = new Sala();
+                lista_salas = maestra.Salas;
+            }
+
+            return lista_salas;
         }
 
         /// <summary>
@@ -580,6 +636,328 @@ namespace Logica
 
         /// <summary>
         /// FIN PADRES
+        /// </summary>
+
+        /// <summary>
+        /// INICIO HIJOS
+        /// </summary>
+
+        private void LeerHijos()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Hijos.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaHijos = JsonConvert.DeserializeObject<List<Hijo>>(contenido);
+
+                if (ListaHijos == null)
+                {
+                    ListaHijos = new List<Hijo>();
+                }
+            }
+        }
+
+        private void GuardarHijos(List<Hijo> listahijos)
+        {
+            CrearArchivos();
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Hijos.txt", false))
+            {
+                string jsonHijos = JsonConvert.SerializeObject(listahijos);
+                writer.Write(jsonHijos);
+            }
+        }
+
+        public Hijo ObtenerAlumnoPorId(UsuarioLogueado usuarioLogueado, int id)
+        {
+            CrearArchivos();
+            LeerHijos();
+            var hijo = new Hijo();
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
+            {
+                hijo = ListaHijos.Where(x => x.Id == id).FirstOrDefault();
+            }
+            else
+            {
+                hijo = null;
+            }
+            GuardarHijos(ListaHijos);
+            return hijo;
+        }
+
+        public Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado)
+        {
+            CrearArchivos();
+            LeerHijos();
+            var resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
+            if (resultado.EsValido)
+            {
+                ListaHijos.Add(hijo);
+            }
+            GuardarHijos(ListaHijos);
+            return resultado;
+
+        }
+
+        public Resultado EditarAlumno(int id, Hijo hijoeditado, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerHijos();
+
+            var resultado = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+
+            if (resultado.EsValido)
+            {
+                var hijo = ObtenerAlumnoPorId(usuariologueado, id);
+                ListaHijos.Remove(hijo);
+                ListaHijos.Add(hijoeditado);
+                GuardarHijos(ListaHijos);
+            }           
+
+            return resultado;
+        }
+
+        public Resultado EliminarAlumno(int id, Hijo hijo, UsuarioLogueado usuariologueado)
+        {
+            LeerHijos();
+
+            var resultado = VerificarUsuarioLogeado(Roles.Directora, usuariologueado);
+
+            if (resultado.EsValido)
+            {
+                var hijoeliminado = ObtenerAlumnoPorId(usuariologueado, id);
+                ListaHijos.Remove(hijoeliminado);
+            }
+            GuardarHijos(ListaHijos);
+            return resultado;
+        }
+
+        public Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)
+        {
+            CrearArchivos();
+            LeerHijos();
+
+            var listagrilla = ListaHijos
+               .Where(x => string.IsNullOrEmpty(busquedaGlobal) || x.Nombre.Contains(busquedaGlobal) || x.Apellido.Contains(busquedaGlobal))
+               .Skip(paginaActual * totalPorPagina).Take(totalPorPagina).ToArray();
+
+            GuardarHijos(ListaHijos);
+            return new Grilla<Hijo>
+            {
+                Lista = listagrilla
+            };
+        }
+
+        public Resultado AsignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+
+            var resultado = new Resultado();
+
+            if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
+            {
+                //ListaPadres.Find(x => x == padre).Hijos.ToList().Add(hijo);//revisar, creo que no anda
+
+                var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
+
+                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que la sala agregar no este repetida
+                    listahijos.Add(hijo);
+                else
+                    resultado.Errores.Add("El hijo ya esta asignado");
+
+                padre.Hijos = listahijos.ToArray();
+
+                EditarPadre(padre.Id, padre, usuariologueado); //Modifica el docente asignandole las salas
+
+                GuardarPadre(ListaPadres);
+            }
+            return resultado;
+        }
+
+        public Resultado DesasignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+
+            var resultado = new Resultado();
+
+            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                //ListaPadres.Find(x => x == padre).Hijos.ToList().Remove(hijo);//revisar, creo que no anda
+
+                var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
+
+                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que la sala agregar no este repetida
+                    listahijos.Add(hijo);
+                else
+                    resultado.Errores.Add("El hijo ya esta asignado");
+
+                padre.Hijos = listahijos.ToArray();
+
+                EditarPadre(padre.Id, padre, usuariologueado); //Modifica el docente asignandole las salas
+
+                GuardarPadre(ListaPadres);
+            }
+            return resultado;
+        }
+
+        public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)
+        {
+            CrearArchivos();
+            LeerPadres();
+            LeerHijos();
+            var resultado = new Resultado();
+            var padre = new Padre();
+            if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
+            {
+                padre = ListaPadres.Where(x => x.Email == usuarioLogueado.Email && x.Apellido == usuarioLogueado.Apellido).FirstOrDefault();
+
+                if (padre.Hijos == null)
+                    resultado.Errores.Add("no hay hijos asignados");
+            }
+
+            return padre.Hijos;
+        }
+
+        /// <summary>
+        /// FIN HIJOS
+        /// </summary>
+
+        /// <summary>
+        /// INICIO NOTAS
+        /// </summary>
+
+        private void LeerNotas()
+        {
+            using (StreamReader reader = new StreamReader(@"C:\Datos\Notas.txt"))
+            {
+                CrearArchivos();
+                string contenido = reader.ReadToEnd();
+                ListaNotas = JsonConvert.DeserializeObject<List<Nota>>(contenido);
+
+                if (ListaNotas == null)
+                {
+                    ListaNotas = new List<Nota>();
+                }
+            }
+        }
+
+        private void GuardarNotas(List<Nota> listaNotas)
+        {
+            CrearArchivos();
+            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Notas.txt", false))
+            {
+                string jsonNotas = JsonConvert.SerializeObject(listaNotas);
+                writer.Write(jsonNotas);
+            }
+
+        }
+
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerNotas();
+            LeerHijos();
+
+            ListaNotas.Add(nota);
+
+            var resultado = new Resultado();
+
+            if (VerificarUsuarioLogeado(Roles.Docente,usuariologueado).EsValido || VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                if (salas != null)
+                {
+                    foreach (var item in salas)
+                    {
+                        var hijo = ListaHijos.Where(x => x.Sala == item).ToList();//arma una lista de todos los hijos en la sala
+
+                        foreach (var item1 in hijo)
+                        {
+                            var hijoseleccionado = ListaHijos.Find(x => x == item1);//busca uno por uno cada hijo de la sala
+
+                            ListaHijos.Remove(hijoseleccionado);
+
+                            var notas = hijoseleccionado.Notas.ToList();
+
+                            notas.Add(nota);//le agrega la nota
+
+                            hijoseleccionado.Notas = notas.ToArray();
+
+                            ListaHijos.Add(hijoseleccionado); //lo vuelve a guardar
+                        }
+                    }
+                }
+                else
+                    resultado.Errores.Add("No hay salas Seleccionadas");
+
+                if (hijos != null)
+                {
+                    var listahijos = hijos.ToList();
+
+                    foreach (var item in listahijos)
+                    {
+                        var hijoseleccionado = ListaHijos.Find(x => x == item);//busca uno por uno cada hijo en la la lista de hijos
+
+                        ListaHijos.Remove(hijoseleccionado);
+
+                        var notas = hijoseleccionado.Notas.ToList();
+
+                        notas.Add(nota);//le agrega la nota
+
+                        hijoseleccionado.Notas = notas.ToArray();
+
+                        ListaHijos.Add(hijoseleccionado); //lo vuelve a guardar
+                    }
+                }
+                else
+                    resultado.Errores.Add("No hay hijos Selecionados");
+
+               
+            }
+
+            GuardarHijos(ListaHijos);
+            GuardarNotas(ListaNotas);
+            return resultado;
+        }
+
+        public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)
+        {
+            CrearArchivos();
+            LeerNotas();
+            Resultado resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
+
+            if (resultado.EsValido)
+            {
+                ListaNotas.Find(x => x == nota).Leida = true;
+            }
+
+            GuardarNotas(ListaNotas);
+
+            return resultado;
+        }
+
+        public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)
+        {
+            var padre = new Padre();
+            if (VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido)
+            {
+                padre = ListaPadres.Where(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido).FirstOrDefault();
+            }
+
+            var listahijos = padre.Hijos.ToList();
+
+            var hijo = listahijos.Where(x => x.Id == idPersona).FirstOrDefault();
+
+            return hijo.Notas;
+        }
+
+        public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// FIN NOTAS
         /// </summary>
     }
 }
