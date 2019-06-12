@@ -25,9 +25,9 @@ namespace Implementacion
             return Principal.Instancia.AltaDocente(docente, usuarioLogueado);
         }
 
-        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)//probar
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.AltaNota(nota, salas, hijos, usuarioLogueado);
         }
 
         public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)//funmciona

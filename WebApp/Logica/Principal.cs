@@ -77,9 +77,9 @@ namespace Logica
                 List<Padre> ListaPadres = new List<Padre>();
             }
 
-            if (!File.Exists(@"C:\Datos\Alumnos.txt"))
+            if (!File.Exists(@"C:\Datos\Hijos.txt"))
             {
-                File.Create(@"C:\Datos\Alumnos.txt").Close();
+                File.Create(@"C:\Datos\Hijos.txt").Close();
             }
             if (ListaHijos == null)
             {
@@ -698,7 +698,7 @@ namespace Logica
 
         }
 
-        public Resultado EditarAlumno(int id, Hijo hijo, UsuarioLogueado usuariologueado)
+        public Resultado EditarAlumno(int id, Hijo hijoeditado, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
             LeerHijos();
@@ -707,12 +707,11 @@ namespace Logica
 
             if (resultado.EsValido)
             {
-                var hijoeditado = ObtenerAlumnoPorId(usuariologueado, id);
-                ListaHijos.Remove(hijoeditado);
-                ListaHijos.Add(hijo);
-            }
-
-            GuardarHijos(ListaHijos);
+                var hijo = ObtenerAlumnoPorId(usuariologueado, id);
+                ListaHijos.Remove(hijo);
+                ListaHijos.Add(hijoeditado);
+                GuardarHijos(ListaHijos);
+            }           
 
             return resultado;
         }
@@ -728,7 +727,7 @@ namespace Logica
                 var hijoeliminado = ObtenerAlumnoPorId(usuariologueado, id);
                 ListaHijos.Remove(hijoeliminado);
             }
-
+            GuardarHijos(ListaHijos);
             return resultado;
         }
 
@@ -809,7 +808,7 @@ namespace Logica
             LeerHijos();
             var resultado = new Resultado();
             var padre = new Padre();
-            if (VerificarUsuarioLogeado(Roles.Padre,usuarioLogueado).EsValido)
+            if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
             {
                 padre = ListaPadres.Where(x => x.Email == usuarioLogueado.Email && x.Apellido == usuarioLogueado.Apellido).FirstOrDefault();
 
@@ -854,11 +853,72 @@ namespace Logica
 
         }
 
-        //public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)
-        //{
-        //    LeerNotas();
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)
+        {
+            CrearArchivos();
+            LeerNotas();
+            LeerHijos();
 
-        //}
+            ListaNotas.Add(nota);
+
+            var resultado = new Resultado();
+
+            if (VerificarUsuarioLogeado(Roles.Docente,usuariologueado).EsValido || VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
+            {
+                if (salas != null)
+                {
+                    foreach (var item in salas)
+                    {
+                        var hijo = ListaHijos.Where(x => x.Sala == item).ToList();//arma una lista de todos los hijos en la sala
+
+                        foreach (var item1 in hijo)
+                        {
+                            var hijoseleccionado = ListaHijos.Find(x => x == item1);//busca uno por uno cada hijo de la sala
+
+                            ListaHijos.Remove(hijoseleccionado);
+
+                            var notas = hijoseleccionado.Notas.ToList();
+
+                            notas.Add(nota);//le agrega la nota
+
+                            hijoseleccionado.Notas = notas.ToArray();
+
+                            ListaHijos.Add(hijoseleccionado); //lo vuelve a guardar
+                        }
+                    }
+                }
+                else
+                    resultado.Errores.Add("No hay salas Seleccionadas");
+
+                if (hijos != null)
+                {
+                    var listahijos = hijos.ToList();
+
+                    foreach (var item in listahijos)
+                    {
+                        var hijoseleccionado = ListaHijos.Find(x => x == item);//busca uno por uno cada hijo en la la lista de hijos
+
+                        ListaHijos.Remove(hijoseleccionado);
+
+                        var notas = hijoseleccionado.Notas.ToList();
+
+                        notas.Add(nota);//le agrega la nota
+
+                        hijoseleccionado.Notas = notas.ToArray();
+
+                        ListaHijos.Add(hijoseleccionado); //lo vuelve a guardar
+                    }
+                }
+                else
+                    resultado.Errores.Add("No hay hijos Selecionados");
+
+               
+            }
+
+            GuardarHijos(ListaHijos);
+            GuardarNotas(ListaNotas);
+            return resultado;
+        }
 
         public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)
         {
