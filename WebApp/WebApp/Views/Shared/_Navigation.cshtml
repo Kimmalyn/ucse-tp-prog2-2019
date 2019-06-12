@@ -22,6 +22,9 @@
                     <li class="">
                         <a href="@Url.Action("Index","Cuaderno")"><span class="nav-label">Consulta</span></a>
                     </li>
+                    <li class="">
+                        <a href="@Url.Action("CrearNotas","Cuaderno")"><span class="nav-label">Crear nota</span></a>
+                    </li>
                 </ul>
             </li>
             @if (loggedUser.RolSeleccionado == Contratos.Roles.Directora)

@@ -75,5 +75,43 @@ namespace AnBem.WebApplication.Controllers
 
             return Json(rta);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> CrearNotas(int[] salas)
+        {
+            if (usuarioLogueado.RolSeleccionado != Roles.Padre)
+            {
+                ViewBag.Salas = servicio.ObtenerSalasPorInstitucion(usuarioLogueado);
+                ViewBag.SalasSeleccionadas = salas;
+                if (salas != null)
+                {
+                    var alumnos = servicio.ObtenerPersonas(usuarioLogueado);
+
+                    ViewBag.Hijos = alumnos.Where(x => salas.Contains(x.Sala.Id)).ToArray();
+                }
+            }
+            else
+            {
+                ViewBag.Hijos = servicio.ObtenerPersonas(usuarioLogueado);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CrearNotas(Nota nota, int[] salas, int[] alumnos)
+        {
+            var infoSalas = salas != null ? salas.Select(x => new Sala() { Id = x }).ToArray() : new Sala[] { };
+            var infoHijos = alumnos != null ? alumnos.Select(x => new Hijo() { Id = x }).ToArray() : new Hijo[] { };
+            
+            nota.Comentarios = new Comentario[] { };
+
+            servicio.AltaNota(nota, infoSalas, infoHijos, usuarioLogueado);
+
+
+            TempData["Ok"] = "Las notas se crearon correctamente";
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -106,7 +106,37 @@ namespace Mocks
 
         public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            if (hijos != null && hijos.Length > 0)
+            {
+                foreach (var item in hijos)
+                {
+                    var hijo = _alumnos.Single(x => x.Id == item.Id);
+                    var notasHijo = hijo.Notas == null ? new List<Nota>() : hijo.Notas.ToList();
+
+                    notasHijo.Add(nota);
+
+                    hijo.Notas = notasHijo.ToArray();
+                }
+            }
+            else
+            {
+                List<Hijo> alumnos = new List<Hijo>();
+                foreach (var sala in salas)
+                {
+                    alumnos.AddRange(_alumnos.Where(x => x.Sala.Id == sala.Id));
+                }
+
+                foreach (var item in alumnos)
+                {
+                    var notasHijo = item.Notas == null ? new List<Nota>() : item.Notas.ToList();
+
+                    notasHijo.Add(nota);
+
+                    item.Notas = notasHijo.ToArray();                    
+                }
+            }
+
+            return new Resultado();
         }
 
         public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)

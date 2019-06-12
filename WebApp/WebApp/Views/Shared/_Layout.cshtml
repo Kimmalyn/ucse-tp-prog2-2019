@@ -64,6 +64,16 @@
                 </div>
             }
 
+            @if (TempData["Ok"] != null && TempData["Ok"] is Contratos.Resultado)
+            {
+                Contratos.Resultado resultado = TempData["Ok"] as Contratos.Resultado;
+
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Atención!</strong> La acción se realizó correctamente.
+                </div>
+            }
+
             @RenderBody()
 
             <!-- Footer -->

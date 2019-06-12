@@ -10121,3 +10121,24 @@ table.webgrid thead th.sort-ASC a, table.webgrid thead th.sort-DESC a {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.students-vertical .list-group-item {
+    float:left;
+    width:100%;
+}
+
+    .students-vertical .list-group-item a {
+        float: left;
+        display: block;
+        width: 100%;
+    }
+
+    .students-vertical .list-group-item img {
+        float: left;
+    }
+
+    .students-vertical .list-group-item h3 {
+        float: left;
+        line-height: 40px;
+        padding-left: 15px;
+    }

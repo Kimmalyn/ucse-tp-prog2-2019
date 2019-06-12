@@ -198,6 +198,7 @@
     <Content Include="Views\Padres\Assign.cshtml" />
     <Content Include="Views\Cuaderno\Index.cshtml" />
     <Content Include="Views\Cuaderno\Book.cshtml" />
+    <Content Include="Views\Cuaderno\CrearNotas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Contratos\Contratos.csproj">
