@@ -32,6 +32,9 @@ namespace WebApp.Controllers
                     ViewBag.User = usuarioLogueado = JsonConvert.DeserializeObject<UsuarioLogueado>(data); 
                 }
             }
+
+            ViewBag.NombreGrupo = CreateService().ObtenerNombreGrupo();
+
             base.OnActionExecuting(filterContext);
         }        
     }
