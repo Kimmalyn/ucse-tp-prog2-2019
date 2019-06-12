@@ -1,0 +1,1 @@
+[{"Salas":[{"Id":0,"Nombre":"San Martin"},{"Id":1,"Nombre":"Belgrano"}],"Id":1,"Nombre":"Diego","Apellido":"Aferez","Email":"dieg_al@gmail.com"},{"Salas":[{"Id":1,"Nombre":"Belgrano"}],"Id":2,"Nombre":"Marcos","Apellido":"Gieco","Email":"marcosgieco@gmail.com"},{"Salas":[{"Id":3,"Nombre":"Sarmiento"}],"Id":3,"Nombre":"kj","Apellido":"kjh","Email":"kj"}]

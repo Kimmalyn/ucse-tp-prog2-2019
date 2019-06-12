@@ -20,7 +20,7 @@ namespace Logica
         private Principal() { }
 
         private static readonly Principal Instacia_Principal = new Principal();
-        
+
         public static Principal Instancia
         {
             get
@@ -41,6 +41,15 @@ namespace Logica
         public List<Nota> ListaNotas { get; set; }
         public List<Sala> ListaSalas { get; set; }
 
+        public static string PathDirectoras { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Directoras.txt").ToString(); } }
+        public static string PathDocentes { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Docentes.txt").ToString(); } }
+        public static string PathPadres { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Padres.txt").ToString(); } }
+        public static string PathHijos { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hijos.txt").ToString(); } }
+        public static string PathClaves { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Claves.txt").ToString(); } }
+        public static string PathSalas { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Salas.txt").ToString(); } }
+        public static string PathNotas { get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Notas.txt").ToString(); } }
+
+
 
         /// <summary>
         /// METODOS
@@ -50,63 +59,63 @@ namespace Logica
         //CreaTodosArchivos
         private void CrearArchivos()
         {
-            if (!File.Exists(@"C:\Datos\Directoras.txt"))
+            if (!File.Exists(PathDirectoras))
             {
-                File.Create(@"C:\Datos\Directoras.txt").Close();
+                File.Create(PathDirectoras).Close();
             }
             if (ListaDirectoras == null)
             {
                 List<Directora> ListaDirectoras = new List<Directora>();
             }
 
-            if (!File.Exists(@"C:\Datos\Docentes.txt"))
+            if (!File.Exists(PathDocentes))
             {
-                File.Create(@"C:\Datos\Docentes.txt").Close();
+                File.Create(PathDocentes).Close();
             }
             if (ListaDocentes == null)
             {
                 List<Docente> ListaDocentes = new List<Docente>();
             }
 
-            if (!File.Exists(@"C:\Datos\Padres.txt"))
+            if (!File.Exists(PathPadres))
             {
-                File.Create(@"C:\Datos\Padres.txt").Close();
+                File.Create(PathPadres).Close();
             }
             if (ListaPadres == null)
             {
                 List<Padre> ListaPadres = new List<Padre>();
             }
 
-            if (!File.Exists(@"C:\Datos\Hijos.txt"))
+            if (!File.Exists(PathHijos))
             {
-                File.Create(@"C:\Datos\Hijos.txt").Close();
+                File.Create(PathHijos).Close();
             }
             if (ListaHijos == null)
             {
                 List<Hijo> ListaHijos = new List<Hijo>();
             }
 
-            if (!File.Exists(@"C:\Datos\Claves.txt"))
+            if (!File.Exists(PathClaves))
             {
-                File.Create(@"C:\Datos\Claves.txt").Close();
+                File.Create(PathClaves).Close();
             }
             if (ListaClaves == null)
             {
                 List<Clave> ListaClaves = new List<Clave>();
             }
 
-            if (!File.Exists(@"C:\Datos\Salas.txt"))
+            if (!File.Exists(PathSalas))
             {
-                File.Create(@"C:\Datos\Salas.txt").Close();
+                File.Create(PathSalas).Close();
             }
             if (ListaDirectoras == null)
             {
                 List<Sala> ListaSalas = new List<Sala>();
             }
 
-            if (!File.Exists(@"C:\Datos\Notas.txt"))
+            if (!File.Exists(PathNotas))
             {
-                File.Create(@"C:\Datos\Notas.txt").Close();
+                File.Create(PathNotas).Close();
             }
             if (ListaNotas == null)
             {
@@ -118,7 +127,7 @@ namespace Logica
         //Login
         private void LeerClaves()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Claves.txt"))
+            using (StreamReader reader = new StreamReader(PathClaves))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -134,12 +143,11 @@ namespace Logica
         private void GuardarClaves(List<Clave> listaclaves)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Claves.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathClaves, false))
             {
                 string jsonClaves = JsonConvert.SerializeObject(listaclaves);
                 writer.Write(jsonClaves);
             }
-
         }
 
         public UsuarioLogueado ObtenerUsuario(string email, string clave)//funciona :'D
@@ -199,7 +207,7 @@ namespace Logica
 
         private void LeerDirectoras()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Directoras.txt"))
+            using (StreamReader reader = new StreamReader(PathDirectoras))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -215,7 +223,7 @@ namespace Logica
         private void GuardarDirectora(List<Directora> listadirectora)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Directoras.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathDirectoras, false))
             {
                 string jsonDirectoras = JsonConvert.SerializeObject(listadirectora);
                 writer.Write(jsonDirectoras);
@@ -319,7 +327,7 @@ namespace Logica
 
         private void LeerDocentes()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Docentes.txt"))
+            using (StreamReader reader = new StreamReader(PathDocentes))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -335,7 +343,7 @@ namespace Logica
         private void GuardarDocente(List<Docente> listadocente)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Docentes.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathDocentes, false))
             {
                 string jsonDocentes = JsonConvert.SerializeObject(listadocente);
                 writer.Write(jsonDocentes);
@@ -439,7 +447,7 @@ namespace Logica
         
         private void LeerSalas()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Salas.txt"))
+            using (StreamReader reader = new StreamReader(PathSalas))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -494,7 +502,6 @@ namespace Logica
 
         public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuariologueado)
         {
-
             CrearArchivos();
             LeerDocentes();
             LeerSalas();
@@ -524,7 +531,7 @@ namespace Logica
 
         private void LeerPadres()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Padres.txt"))
+            using (StreamReader reader = new StreamReader(PathPadres))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -540,7 +547,7 @@ namespace Logica
         private void GuardarPadre(List<Padre> listapadre)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Padres.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathPadres, false))
             {
                 string jsonPadres = JsonConvert.SerializeObject(listapadre);
                 writer.Write(jsonPadres);
@@ -644,7 +651,7 @@ namespace Logica
 
         private void LeerHijos()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Hijos.txt"))
+            using (StreamReader reader = new StreamReader(PathHijos))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -660,7 +667,7 @@ namespace Logica
         private void GuardarHijos(List<Hijo> listahijos)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Hijos.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathHijos))
             {
                 string jsonHijos = JsonConvert.SerializeObject(listahijos);
                 writer.Write(jsonHijos);
@@ -760,7 +767,7 @@ namespace Logica
 
                 var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
 
-                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que la sala agregar no este repetida
+                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que el hijo agregar no este repetida
                     listahijos.Add(hijo);
                 else
                     resultado.Errores.Add("El hijo ya esta asignado");
@@ -829,7 +836,7 @@ namespace Logica
 
         private void LeerNotas()
         {
-            using (StreamReader reader = new StreamReader(@"C:\Datos\Notas.txt"))
+            using (StreamReader reader = new StreamReader(PathNotas))
             {
                 CrearArchivos();
                 string contenido = reader.ReadToEnd();
@@ -845,7 +852,7 @@ namespace Logica
         private void GuardarNotas(List<Nota> listaNotas)
         {
             CrearArchivos();
-            using (StreamWriter writer = new StreamWriter(@"C:\Datos\Notas.txt", false))
+            using (StreamWriter writer = new StreamWriter(PathNotas))
             {
                 string jsonNotas = JsonConvert.SerializeObject(listaNotas);
                 writer.Write(jsonNotas);
