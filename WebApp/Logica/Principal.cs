@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 using Contratos;
 using Newtonsoft.Json;
 
+//agregar.count a las altas
+//verificar rol antes de leeer
+//usar un delegado para verificar los roles
+//tipo de dato generico + switch tipo ¨generic¨
+//falta el total en la grilla
+//iqueryable<alumnos> query = total.where(x=>x.nombre == "a").asquerible();
+
 namespace Logica
 {
     public class Principal
