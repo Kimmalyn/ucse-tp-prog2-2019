@@ -1,0 +1,1 @@
+[{"Email":"lol","Password":"123456","Rol":1},{"Email":"dieg_al@gmail.com","Password":"449169","Rol":2},{"Email":"marcosgieco@gmail.com","Password":"730879","Rol":2},{"Email":"asd","Password":"647894","Rol":1},{"Email":"kj","Password":"443152","Rol":2}]
