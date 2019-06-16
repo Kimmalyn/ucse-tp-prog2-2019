@@ -688,7 +688,7 @@ namespace Logica
             var hijo = new Hijo();
             if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
             {
-                hijo = ListaHijos.Where(x => x.Id == id).FirstOrDefault();
+                hijo = ListaHijos.Single(x => x.Id == id);
             }
             else
             {
@@ -705,6 +705,7 @@ namespace Logica
             var resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
             if (resultado.EsValido)
             {
+                hijo.Id = ListaHijos.Count() + 1;
                 ListaHijos.Add(hijo);
             }
             GuardarHijos(ListaHijos);
@@ -801,14 +802,14 @@ namespace Logica
 
                 var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
 
-                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que la sala agregar no este repetida
+                if (listahijos.Any(x => x.Id == hijo.Id) == false) //Verifica que el hijo a agregar no este repetido
                     listahijos.Add(hijo);
                 else
                     resultado.Errores.Add("El hijo ya esta asignado");
 
                 padre.Hijos = listahijos.ToArray();
 
-                EditarPadre(padre.Id, padre, usuariologueado); //Modifica el docente asignandole las salas
+                EditarPadre(padre.Id, padre, usuariologueado); //Modifica el padre asignandole los hijos
 
                 GuardarPadre(ListaPadres);
             }
@@ -821,16 +822,22 @@ namespace Logica
             LeerPadres();
             LeerHijos();
             var resultado = new Resultado();
-            var padre = new Padre();
-            if (VerificarUsuarioLogeado(Roles.Directora,usuarioLogueado).EsValido)
+
+            Hijo[] hijos = null;
+            if (VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado).EsValido)
             {
-                padre = ListaPadres.Where(x => x.Email == usuarioLogueado.Email && x.Apellido == usuarioLogueado.Apellido).FirstOrDefault();
+                hijos = ListaHijos.ToArray();
+            }
+            if (VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado).EsValido)
+            {
+               var  padre = ListaPadres.Single(x => x.Email == usuarioLogueado.Email && x.Apellido == usuarioLogueado.Apellido);
 
                 if (padre.Hijos == null)
                     resultado.Errores.Add("no hay hijos asignados");
+                hijos = padre.Hijos;
             }
 
-            return padre.Hijos;
+            return hijos;
         }
 
         /// <summary>
@@ -883,9 +890,9 @@ namespace Logica
                 {
                     foreach (var item in salas)
                     {
-                        var hijo = ListaHijos.Where(x => x.Sala == item).ToList();//arma una lista de todos los hijos en la sala
+                        var hijosenlasala = ListaHijos.Where(x => x.Sala == item).ToList();//arma una lista de todos los hijos en la sala
 
-                        foreach (var item1 in hijo)
+                        foreach (var item1 in hijosenlasala)
                         {
                             var hijoseleccionado = ListaHijos.Find(x => x == item1);//busca uno por uno cada hijo de la sala
 
@@ -952,22 +959,50 @@ namespace Logica
 
         public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)
         {
-            var padre = new Padre();
+            CrearArchivos();
+            LeerNotas();
+            LeerHijos();
+            LeerPadres();
+
+            Nota[] notas = null;
+
             if (VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido)
             {
-                padre = ListaPadres.Where(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido).FirstOrDefault();
+                var padre = ListaPadres.Single(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido);
+
+                var listahijos = padre.Hijos.ToList();
+
+                var hijo = listahijos.Single(x => x.Id == idPersona);
+
+                notas = hijo.Notas;
             }
-
-            var listahijos = padre.Hijos.ToList();
-
-            var hijo = listahijos.Where(x => x.Id == idPersona).FirstOrDefault();
-
-            return hijo.Notas;
+            if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
+            {
+                notas = ListaNotas.ToArray();
+            }
+            GuardarHijos(ListaHijos);
+            GuardarPadre(ListaPadres);
+            return notas;
         }
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            CrearArchivos();
+            LeerNotas();
+            var resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
+            if (resultado.EsValido)
+            {
+                var notacomentada = ListaNotas.Single(x => x.Id == nota.Id);
+                ListaNotas.Remove(notacomentada);
+
+                var comentarios = notacomentada.Comentarios == null ? new List<Comentario>() : notacomentada.Comentarios.ToList();
+                comentarios.Add(nuevoComentario);
+                notacomentada.Comentarios = comentarios.ToArray();
+
+                ListaNotas.Add(notacomentada);
+            }
+
+            return resultado;                       
         }
 
         /// <summary>

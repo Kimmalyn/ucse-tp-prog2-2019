@@ -172,7 +172,7 @@ namespace Implementacion
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
         {
-            throw new NotImplementedException();
+            return Principal.Instancia.ResponderNota(nota, nuevoComentario, usuarioLogueado);
         }
     }
 }
