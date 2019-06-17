@@ -879,7 +879,7 @@ namespace Logica
             LeerNotas();
             LeerHijos();
 
-            //ListaNotas.Add(nota);
+            ListaNotas.Add(nota);
 
             var resultado = new Resultado();
             var notasxhijo = new List<Nota>();
@@ -890,39 +890,40 @@ namespace Logica
                 {
                     foreach (var sala in salas)
                     {
-                        //var hijosdelassala = ListaHijos.Where(x => x.Sala == sala).ToList();
                         foreach (var buscador in ListaHijos)
                         {
                             if (buscador.Sala.Id==sala.Id)
                             {
-                                //ListaHijos.Remove(buscador);
-
                                  if (buscador.Notas != null)
                                     notasxhijo = buscador.Notas.ToList();
-
+                                nota.Id = notasxhijo.Count() + 1;
                                 notasxhijo.Add(nota);
-                                buscador.Notas = notasxhijo.ToArray();
-                                //ListaHijos.Add(buscador);
+                                buscador.Notas = notasxhijo.ToArray();                                
                             }
                         }
                     }
                 }
 
 
-                foreach (var hijo in hijos)
+                if (hijos != null)
                 {
-                    foreach (var buscador in ListaHijos)
+                    foreach (var hijo in hijos)
                     {
-                        if (hijo==buscador)
+                        foreach (var buscador in ListaHijos)
                         {
-                            ListaHijos.Remove(buscador);
-                            var notas = buscador.Notas.ToList();
-                            notas.Add(nota);
-                            buscador.Notas = notas.ToArray();
-                            ListaHijos.Add(buscador);
+                            if (hijo.Id == buscador.Id)
+                            {
+                                if (buscador.Notas != null)
+                                    notasxhijo = buscador.Notas.ToList();
+
+                                nota.Id = notasxhijo.Count() + 1;
+                                notasxhijo.Add(nota);
+                                buscador.Notas = notasxhijo.ToArray();
+                            }
                         }
                     }
                 }
+
             }
             else
                 resultado.Errores.Add("Este usuario no puede agregar notas");
@@ -936,11 +937,11 @@ namespace Logica
         {
             CrearArchivos();
             LeerNotas();
-            Resultado resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
+            Resultado resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
 
             if (resultado.EsValido)
             {
-                ListaNotas.Find(x => x == nota).Leida = true;
+                ListaNotas.Find(x => x.Id == nota.Id).Leida = true;
             }
 
             GuardarNotas(ListaNotas);
@@ -965,13 +966,21 @@ namespace Logica
 
                 var hijo = listahijos.Single(x => x.Id == idPersona);
 
-                notas = hijo.Notas;
+                if (hijo.Notas!=null)
+                {
+                    notas = hijo.Notas;
+                }
+                
             }
             if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
             {
                 var alumno = ListaHijos.Single(x => x.Id == idPersona);
 
-                notas = alumno.Notas;
+                if (alumno.Notas!=null)
+                {
+                    notas = alumno.Notas;
+                }
+                
             }
             GuardarHijos(ListaHijos);
             GuardarPadre(ListaPadres);
