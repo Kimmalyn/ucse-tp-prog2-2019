@@ -873,75 +873,88 @@ namespace Logica
 
         }
 
-        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)//LOGRAR QUE CARGE NOTAS CORRECTAMENTE
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)//revisar tema alta nota de padre
         {
             CrearArchivos();
-            LeerNotas();
-            LeerHijos();
-
-            ListaNotas.Add(nota);
 
             var resultado = new Resultado();
-            var notasxhijo = new List<Nota>();
 
-            if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido || VerificarUsuarioLogeado(Roles.Docente, usuariologueado).EsValido)
+            if (salas != null)
             {
-                if (salas !=null)
+                foreach (var sala in salas)
                 {
-                    foreach (var sala in salas)
+                    LeerHijos();
+                    foreach (var buscador in ListaHijos)
                     {
-                        foreach (var buscador in ListaHijos)
+
+                        if (buscador.Sala.Id == sala.Id)
                         {
-                            if (buscador.Sala.Id==sala.Id)
-                            {
-                                 if (buscador.Notas != null)
-                                    notasxhijo = buscador.Notas.ToList();
-                                nota.Id = notasxhijo.Count() + 1;
+                            LeerNotas();
+                            var notasxhijo = buscador.Notas == null ? new List<Nota>() : buscador.Notas.ToList();
+
+                            if (notasxhijo.Any(x => x.Id == nota.Id))
+                                resultado.Errores.Add("la nota esta agregada");
+                            else
+                                nota.Id = ListaNotas.Count() + 1;
+                                ListaNotas.Add(nota);
                                 notasxhijo.Add(nota);
-                                buscador.Notas = notasxhijo.ToArray();                                
-                            }
+
+                            buscador.Notas = notasxhijo.ToArray();
+
+                            GuardarNotas(ListaNotas);
                         }
+                        
                     }
+                    GuardarHijos(ListaHijos);
                 }
-
-
-                if (hijos != null)
-                {
-                    foreach (var hijo in hijos)
-                    {
-                        foreach (var buscador in ListaHijos)
-                        {
-                            if (hijo.Id == buscador.Id)
-                            {
-                                if (buscador.Notas != null)
-                                    notasxhijo = buscador.Notas.ToList();
-
-                                nota.Id = notasxhijo.Count() + 1;
-                                notasxhijo.Add(nota);
-                                buscador.Notas = notasxhijo.ToArray();
-                            }
-                        }
-                    }
-                }
-
             }
             else
-                resultado.Errores.Add("Este usuario no puede agregar notas");
+                resultado.Errores.Add("no se seleccionaron salas");
 
-            GuardarHijos(ListaHijos);
-            GuardarNotas(ListaNotas);
+            if (hijos != null)
+            {
+                
+                foreach (var hijo in hijos)
+                {
+                    LeerHijos();
+                    foreach (var buscador in ListaHijos)
+                    {
+                        
+                        if (hijo.Id == buscador.Id)
+                        {
+                            LeerNotas();
+                            var notasxhijo = buscador.Notas == null ? new List<Nota>() : buscador.Notas.ToList();
+
+                            if (notasxhijo.Any(x => x.Id == nota.Id))
+                                resultado.Errores.Add("la nota esta agregada");
+                            else
+                                notasxhijo.Add(nota);
+
+                            buscador.Notas = notasxhijo.ToArray();
+                            GuardarHijos(ListaHijos);
+                        }
+                    }
+                    GuardarHijos(ListaHijos);
+                }
+               
+            }
+            else
+                resultado.Errores.Add("no se seleccionaron ningun hijo");
+
             return resultado;
         }
 
-        public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)//TAMPOCO FUNCIONA
+        public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)
         {
             CrearArchivos();
             LeerNotas();
-            Resultado resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
+
+            Resultado resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
 
             if (resultado.EsValido)
             {
-                ListaNotas.Find(x => x.Id == nota.Id).Leida = true;
+               ListaNotas.Find(x => x.Id == nota.Id).Leida = true;
+
             }
 
             GuardarNotas(ListaNotas);
@@ -949,49 +962,63 @@ namespace Logica
             return resultado;
         }
 
-        public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)//Arreglar
+        public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)//revisar
         {
             CrearArchivos();
             LeerNotas();
             LeerHijos();
             LeerPadres();
 
-            Nota[] notas = null;
+            List<Nota> notas=new List<Nota>();
 
             if (VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido)
             {
-                var padre = ListaPadres.Single(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido);
+                //var padre = ListaPadres.Single(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido);
 
-                var listahijos = padre.Hijos.ToList();
+                //var listahijos = padre.Hijos.ToList();
 
-                var hijo = listahijos.Single(x => x.Id == idPersona);
+                //var hijo = listahijos.Single(x => x.Id == idPersona);
+
+                var hijo = ListaHijos.Single(x => x.Id == idPersona);
 
                 if (hijo.Notas!=null)
                 {
-                    notas = hijo.Notas;
+                    foreach (var nota in hijo.Notas)
+                    {
+                        var notaenlista = ListaNotas.SingleOrDefault(x => x.Id == nota.Id);
+                        notas.Add(notaenlista);
+                    }
                 }
                 
             }
+
             if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
             {
                 var alumno = ListaHijos.Single(x => x.Id == idPersona);
 
                 if (alumno.Notas!=null)
                 {
-                    notas = alumno.Notas;
+                    foreach (var nota in alumno.Notas)
+                    {
+                        var notaenlista = ListaNotas.SingleOrDefault(x => x.Id == nota.Id);
+                        notas.Add(notaenlista);
+                    }
+                    
                 }
                 
             }
+
             GuardarHijos(ListaHijos);
             GuardarPadre(ListaPadres);
-            return notas;
+            GuardarNotas(ListaNotas);
+            return notas.ToArray();
         }
 
         public Resultado ResponderNota(Nota nota, Comentario nuevoComentario, UsuarioLogueado usuarioLogueado)
         {
             CrearArchivos();
             LeerNotas();
-            var resultado = VerificarUsuarioLogeado(Roles.Directora, usuarioLogueado);
+            var resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
             if (resultado.EsValido)
             {
                 var notacomentada = ListaNotas.Single(x => x.Id == nota.Id);
@@ -1003,7 +1030,7 @@ namespace Logica
 
                 ListaNotas.Add(notacomentada);
             }
-
+            GuardarNotas(ListaNotas);
             return resultado;                       
         }
 
