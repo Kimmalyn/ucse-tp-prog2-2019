@@ -10,7 +10,7 @@ namespace Implementacion
 {
     public class ServicioDeImplementacion : IServicioWeb
     {
-        public Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.AltaAlumno(hijo, usuarioLogueado);
         }
@@ -25,37 +25,37 @@ namespace Implementacion
             return Principal.Instancia.AltaDocente(docente, usuarioLogueado);
         }
 
-        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.AltaNota(nota, salas, hijos, usuarioLogueado);
         }
 
-        public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)//funmciona
+        public Resultado AltaPadreMadre(Padre padre, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.AltaPadre(padre, usuarioLogueado);
         }
 
-        public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado AsignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.AsignarDocenteSala(docente, sala, usuarioLogueado);
         }
 
-        public Resultado AsignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado AsignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.AsignarHijoPadre(hijo, padre, usuarioLogueado);
         }
 
-        public Resultado DesasignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado DesasignarDocenteSala(Docente docente, Sala sala, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.DesasignarDocenteSala(docente, sala, usuarioLogueado);
         }
 
-        public Resultado DesasignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado DesasignarHijoPadre(Hijo hijo, Padre padre, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.DesasignarHijoPadre(hijo, padre, usuarioLogueado);
         }
 
-        public Resultado EditarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado EditarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.EditarAlumno(id, hijo, usuarioLogueado);
         }
@@ -75,7 +75,7 @@ namespace Implementacion
             return Principal.Instancia.EditarPadre(id, padre, usuarioLogueado);
         }
 
-        public Resultado EliminarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado EliminarAlumno(int id, Hijo hijo, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.EliminarAlumno(id, hijo, usuarioLogueado);
         }
@@ -95,17 +95,17 @@ namespace Implementacion
             return Principal.Instancia.EliminarPadre(id, padre, usuarioLogueado);
         }
 
-        public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)//probar
+        public Resultado MarcarNotaComoLeida(Nota nota, UsuarioLogueado usuarioLogueado)//Funciona
         {
             return Principal.Instancia.MarcarNotaComoLeida(nota, usuarioLogueado);
         }
 
-        public Hijo ObtenerAlumnoPorId(UsuarioLogueado usuarioLogueado, int id)//probar
+        public Hijo ObtenerAlumnoPorId(UsuarioLogueado usuarioLogueado, int id)//Funciona
         {
             return Principal.Instancia.ObtenerAlumnoPorId(usuarioLogueado, id);
         }
 
-        public Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)//probar
+        public Grilla<Hijo> ObtenerAlumnos(UsuarioLogueado usuarioLogueado, int paginaActual, int totalPorPagina, string busquedaGlobal)//Funciona
         {
             return Principal.Instancia.ObtenerAlumnos(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
@@ -140,9 +140,9 @@ namespace Implementacion
             throw new NotImplementedException();
         }
 
-        public string ObtenerNombreGrupo()
+        public string ObtenerNombreGrupo()//funciona
         {
-            throw new NotImplementedException();
+            return $"StarFleet - Busso,Copes";
         }
 
         public Padre ObtenerPadrePorId(UsuarioLogueado usuarioLogueado, int id)//funciona
@@ -155,12 +155,12 @@ namespace Implementacion
             return Principal.Instancia.ObtenerPadres(usuarioLogueado, paginaActual, totalPorPagina, busquedaGlobal);
         }
 
-        public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)//probar
+        public Hijo[] ObtenerPersonas(UsuarioLogueado usuarioLogueado)//funciona
         {
             return Principal.Instancia.ObtenerPersonas(usuarioLogueado);
         }
 
-        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)//probar
+        public Sala[] ObtenerSalasPorInstitucion(UsuarioLogueado usuarioLogueado)//funciona
         {
             return Principal.Instancia.ObtenerSalasPorInstitucion(usuarioLogueado);
         }

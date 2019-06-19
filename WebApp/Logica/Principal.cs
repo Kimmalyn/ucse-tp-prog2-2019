@@ -8,7 +8,7 @@ using Contratos;
 using Newtonsoft.Json;
 
 //agregar.count a las altas
-//verificar rol antes de leeer
+//verificar rol antes de leer
 //usar un delegado para verificar los roles
 //tipo de dato generico + switch tipo ¨generic¨
 //falta el total en la grilla
@@ -314,13 +314,14 @@ namespace Logica
             var listagrilla = ListaDirectoras
                .Where(x => string.IsNullOrEmpty(busquedaGlobal) || x.Nombre.Contains(busquedaGlobal) || x.Apellido.Contains(busquedaGlobal))
                .Skip(paginaActual * totalPorPagina).Take(totalPorPagina).ToArray();
-
+            
             GuardarDirectora(ListaDirectoras);
             return new Grilla<Directora>
             {
-                Lista = listagrilla
+                Lista = listagrilla,
+                CantidadRegistros = ListaDirectoras.Count(),
             };
-        }//AGREGAR CONTADOR DE ELEMENTOS
+        }
 
         /// <summary>
         /// FIN DIRECTORA
@@ -438,7 +439,8 @@ namespace Logica
             GuardarDocente(ListaDocentes);
             return new Grilla<Docente>
             {
-                Lista = listagrilla
+                Lista = listagrilla,
+                CantidadRegistros = ListaDocentes.Count(),
             };
         }
 
@@ -642,7 +644,8 @@ namespace Logica
             GuardarPadre(ListaPadres);
             return new Grilla<Padre>
             {
-                Lista = listagrilla
+                Lista = listagrilla,
+                CantidadRegistros = ListaPadres.Count(),
             };
         }
 
@@ -756,8 +759,8 @@ namespace Logica
             GuardarHijos(ListaHijos);
             return new Grilla<Hijo>
             {
-                Lista = listagrilla
-
+                Lista = listagrilla,
+                CantidadRegistros = ListaHijos.Count(),
             };
         }
 
@@ -769,8 +772,7 @@ namespace Logica
             var resultado = new Resultado();
 
             if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
-            {
-                //ListaPadres.Find(x => x == padre).Hijos.ToList().Add(hijo);//revisar, creo que no anda
+            {               
 
                 var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
 
@@ -796,8 +798,7 @@ namespace Logica
             var resultado = new Resultado();
 
             if (VerificarUsuarioLogeado(Roles.Directora, usuariologueado).EsValido)
-            {
-                //ListaPadres.Find(x => x == padre).Hijos.ToList().Remove(hijo);//revisar, creo que no anda
+            {              
 
                 var listahijos = padre.Hijos != null ? padre.Hijos.ToList() : new List<Hijo>();
 
@@ -834,6 +835,22 @@ namespace Logica
                 if (padre.Hijos == null)
                     resultado.Errores.Add("no hay hijos asignados");
                 hijos = padre.Hijos;
+            }
+            if (VerificarUsuarioLogeado(Roles.Docente, usuarioLogueado).EsValido)
+            {
+                var docente = ListaDocentes.Single(x => x.Email == usuarioLogueado.Email & x.Apellido == usuarioLogueado.Apellido);
+
+                foreach (var sala in docente.Salas)
+                {
+                    var hijo = ListaHijos.Where(x => x.Sala.Id == sala.Id).ToList();
+
+                    var listaconagregado = hijos == null ? new List<Hijo>() : hijos.ToList();
+
+                    if (hijo !=null)
+                        listaconagregado.AddRange(hijo);
+
+                    hijos = listaconagregado.ToArray();
+                }
             }
 
             return hijos;
@@ -873,13 +890,13 @@ namespace Logica
 
         }
 
-        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)//revisar tema alta nota de padre
+        public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
 
             var resultado = new Resultado();
 
-            if (salas != null)
+            if (hijos == null)
             {
                 foreach (var sala in salas)
                 {
@@ -907,11 +924,11 @@ namespace Logica
                     }
                     GuardarHijos(ListaHijos);
                 }
-            }
+            }//si selecciona salas
             else
                 resultado.Errores.Add("no se seleccionaron salas");
 
-            if (hijos != null)
+            if (salas != null)
             {
                 
                 foreach (var hijo in hijos)
@@ -928,16 +945,18 @@ namespace Logica
                             if (notasxhijo.Any(x => x.Id == nota.Id))
                                 resultado.Errores.Add("la nota esta agregada");
                             else
+                                nota.Id = ListaNotas.Count() + 1;
+                                ListaNotas.Add(nota);
                                 notasxhijo.Add(nota);
 
                             buscador.Notas = notasxhijo.ToArray();
-                            GuardarHijos(ListaHijos);
+                            GuardarNotas(ListaNotas);
                         }
                     }
                     GuardarHijos(ListaHijos);
                 }
                
-            }
+            }//si selecciona hijos
             else
                 resultado.Errores.Add("no se seleccionaron ningun hijo");
 
@@ -962,7 +981,7 @@ namespace Logica
             return resultado;
         }
 
-        public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)//revisar
+        public Nota[] ObtenerCuadernoComunicaciones(int idPersona, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
             LeerNotas();
@@ -971,28 +990,8 @@ namespace Logica
 
             List<Nota> notas=new List<Nota>();
 
-            if (VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido)
-            {
-                //var padre = ListaPadres.Single(x => x.Email == usuariologueado.Email && x.Apellido == usuariologueado.Apellido);
 
-                //var listahijos = padre.Hijos.ToList();
-
-                //var hijo = listahijos.Single(x => x.Id == idPersona);
-
-                var hijo = ListaHijos.Single(x => x.Id == idPersona);
-
-                if (hijo.Notas!=null)
-                {
-                    foreach (var nota in hijo.Notas)
-                    {
-                        var notaenlista = ListaNotas.SingleOrDefault(x => x.Id == nota.Id);
-                        notas.Add(notaenlista);
-                    }
-                }
-                
-            }
-
-            if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido)
+            if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido | VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido | VerificarUsuarioLogeado(Roles.Docente, usuariologueado).EsValido)
             {
                 var alumno = ListaHijos.Single(x => x.Id == idPersona);
 
@@ -1018,24 +1017,33 @@ namespace Logica
         {
             CrearArchivos();
             LeerNotas();
-            var resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
+            var resultado = new Resultado();
+
             if (resultado.EsValido)
             {
                 var notacomentada = ListaNotas.Single(x => x.Id == nota.Id);
                 ListaNotas.Remove(notacomentada);
 
                 var comentarios = notacomentada.Comentarios == null ? new List<Comentario>() : notacomentada.Comentarios.ToList();
-                comentarios.Add(nuevoComentario);
+
+                if (nuevoComentario.Mensaje != "")
+                    comentarios.Add(nuevoComentario);
+                else
+                    resultado.Errores.Add("no se escrbribio ningun comentario");
+
                 notacomentada.Comentarios = comentarios.ToArray();
 
                 ListaNotas.Add(notacomentada);
             }
+
             GuardarNotas(ListaNotas);
+
             return resultado;                       
         }
 
         /// <summary>
         /// FIN NOTAS
         /// </summary>
+
     }
 }
