@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Implementacion
 {
+    //EN ESTA CLASE PODRIAN RESOLVER EL ACCESO POR ROLES PARA NO NECESITARLO EN PRINCIPAL
     public class ServicioDeImplementacion : IServicioWeb
     {
         public Resultado AltaAlumno(Hijo hijo, UsuarioLogueado usuarioLogueado)//Funciona

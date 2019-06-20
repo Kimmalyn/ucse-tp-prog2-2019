@@ -39,7 +39,9 @@ namespace Logica
         /// <summary>
         /// PROPIEDADES
         /// </summary>
-
+        
+        //NO ES RECOMENDABLE ESTO, SOBRE TODO QUE SEAN PUBLICAS
+        //ACOTAR EL USO AL AMBITO DE CADA METODO
         public List<Directora> ListaDirectoras { get; set; }
         public List<Docente> ListaDocentes { get; set; }
         public List<Padre> ListaPadres { get; set; }
@@ -62,6 +64,8 @@ namespace Logica
 
 
         //CreaTodosArchivos
+        //ESTO PODRIA HACERSE EN UNA CLASE EN UN ARCHIVO DISTINTO, Y SOBRE TODO, HACERSE UNA SOLA VEZ EN EL CONSTRUCTOR PRIVADO DEL SINGLETON, PARA
+        //EVITAR TENER QUE PONERLO EN TODOS LADOS
         private void CrearArchivos()
         {
             if (!File.Exists(PathDirectoras))
@@ -501,6 +505,7 @@ namespace Logica
 
                 docente.Salas = salasDocente.ToArray();
 
+                //SI SIEMPRE QUE EDITAS TENES QUE GUARDAR, LA INVOCACION AL GUARDAR LA PODRIAS HACER DENTRO DEL METODO EDITAR
                 EditarDocente(docente.Id, docente, usuariologueado); //Modifica el docente desasignandole las salas
                 GuardarDocente(ListaDocentes);
             }
@@ -890,6 +895,7 @@ namespace Logica
 
         }
 
+        //HACIENDO PRIMERO LO DE SALAS SE EVITA DUPLICIDAD DE CODIGO
         public Resultado AltaNota(Nota nota, Sala[] salas, Hijo[] hijos, UsuarioLogueado usuariologueado)
         {
             CrearArchivos();
@@ -967,7 +973,7 @@ namespace Logica
         {
             CrearArchivos();
             LeerNotas();
-
+            //FALTA VALIDAR QUE EL USUARIO PUEDA LLEGAR A LA NOTA
             Resultado resultado = VerificarUsuarioLogeado(Roles.Padre, usuarioLogueado);
 
             if (resultado.EsValido)
@@ -993,6 +999,7 @@ namespace Logica
 
             if (VerificarUsuarioLogeado(Roles.Directora,usuariologueado).EsValido | VerificarUsuarioLogeado(Roles.Padre, usuariologueado).EsValido | VerificarUsuarioLogeado(Roles.Docente, usuariologueado).EsValido)
             {
+                //FALTA VALIDAR QUE SEA HIJO DEL PADRE, O QUE ESTE EN ALGUNA SALA DEL DOCENTE
                 var alumno = ListaHijos.Single(x => x.Id == idPersona);
 
                 if (alumno.Notas!=null)
@@ -1018,7 +1025,7 @@ namespace Logica
             CrearArchivos();
             LeerNotas();
             var resultado = new Resultado();
-
+            //FALTA VALIDAR QUE EL USUARIO LOGUEADO PUEDA ACCEDER A LA NOTA
             if (resultado.EsValido)
             {
                 var notacomentada = ListaNotas.Single(x => x.Id == nota.Id);
